@@ -1,0 +1,90 @@
+:root{
+  --bg:#0b1223; --panel:#0f172a; --panel-2:#0b1328;
+  --text:#e5e7eb; --muted:#9ca3af; --line:#1f2937;
+  --accent:#ff2e2e; --ok:#22c55e; --warn:#f59e0b;
+}
+
+/* Temas */
+:root.theme-classic{}
+:root.theme-opifex{ --accent:#ff2e2e; --panel:#1c1c1c; --panel-2:#000000; --bg:#0b0b0b; }
+:root.theme-dark{ --accent:#e5e7eb; --panel:#0c0c0c; --panel-2:#050505; --bg:#000000; }
+
+/* Base */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif; color:var(--text);
+  background: radial-gradient(1200px 800px at 80% -10%, #111a33 0%, var(--bg) 40%);
+  display:flex; align-items:center; justify-content:center; padding:16px;
+}
+.hidden{ display:none !important; }
+.app{width:min(960px,100%)}
+header{display:flex; gap:12px; align-items:center; justify-content:space-between; margin-bottom:12px}
+header h1{font-size:clamp(18px,3.5vw,28px); margin:0; letter-spacing:.5px}
+
+.subtitle{margin:6px 0 4px 0; font-size:14px; color:#cbd5e1}
+.card{background:linear-gradient(180deg,var(--panel),var(--panel-2)); border:1px solid var(--line); border-radius:18px; box-shadow:0 12px 30px rgba(0,0,0,.35); padding:18px}
+
+.row{display:flex; gap:12px; flex-wrap:wrap; align-items:center}
+.row.compact{gap:8px}
+.col{flex:1 1 260px}
+
+label{font-size:12px; color:var(--muted); display:block; margin-bottom:6px}
+input[type="text"], input[type="number"], textarea, select, .select{
+  width:100%; background:#0b142a; color:var(--text); border:1px solid #1f2a44; outline:none; border-radius:12px; padding:12px 14px;
+}
+textarea{min-height:160px; resize:vertical}
+
+/* Botones */
+.btn{appearance:none; border:none; cursor:pointer; border-radius:14px; padding:12px 16px; font-weight:600; color:white; background:var(--accent); box-shadow:0 8px 18px rgba(255,46,46,.25); transition:transform .06s ease, filter .2s ease}
+.btn:active{transform:translateY(1px)}
+.btn.secondary{background:#334155; box-shadow:none}
+.btn.ghost{background:transparent; border:1px solid #334155; color:#cbd5e1}
+.btn.warn{background:var(--warn)}
+
+.hint{color:var(--muted); font-size:12px}
+.chip{display:inline-flex; align-items:center; gap:8px; padding:8px 10px; border-radius:999px; border:1px solid #334155; background:#0c162d; font-size:12px}
+.divider{height:1px; background:#1f2937; margin:14px 0}
+.center{text-align:center}
+.title{font-size:clamp(16px,3vw,22px); margin:0 0 10px 0}
+.big{font-size:clamp(24px,6vw,40px); font-weight:800}
+
+/* Insignias */
+.badge{display:inline-block; padding:6px 10px; border-radius:999px; font-weight:700; font-size:12px}
+.badge.green{background:rgba(34,197,94,.15); color:#86efac; border:1px solid rgba(34,197,94,.35)}
+.badge.red{background:rgba(239,68,68,.15); color:#fca5a5; border:1px solid rgba(239,68,68,.35)}
+
+/* Listas */
+.players-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:10px}
+.player-card{background:#0b142a; border:1px solid #1f2a44; border-radius:14px; padding:12px}
+.player-card h4{margin:0 0 8px 0}
+.player-card .dead{opacity:.4; text-decoration:line-through}
+
+/* Votación */
+.vote-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:10px}
+@media(min-width:680px){.vote-grid{grid-template-columns:repeat(3,1fr)}}
+.vote-btn{padding:16px; border-radius:14px; border:1px solid #2a3557; background:#0b142a; color:#e5e7eb; font-weight:700; cursor:pointer}
+.vote-btn.dead{opacity:.35; cursor:not-allowed}
+
+/* Topbar */
+.topbar{display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:10px}
+.topbar .btn{padding:8px 12px; border-radius:10px; font-size:13px}
+
+/* Ganador */
+.winner{font-size:clamp(20px,6vw,42px); font-weight:900}
+.sub{color:#cbd5e1}
+
+/* Footer */
+.footer{margin-top:10px; color:#9ca3af; font-size:12px}
+
+/* Log y resumen */
+.log{list-style:disc; padding-left:18px; display:flex; flex-direction:column; gap:6px}
+#summaryBody{display:flex; flex-direction:column; gap:10px}
+.summary-card{background:#0b142a; border:1px solid #1f2a44; border-radius:14px; padding:12px}
+
+/* ==== TOGGLE PRESETS (botones de modo) ==== */
+.toggle-group{display:flex; flex-wrap:wrap; gap:8px; margin:8px 0 10px 0}
+.group-label{width:100%; font-size:12px; color:#cbd5e1; opacity:.9}
+.toggle{appearance:none; border:1px solid #334155; background:#0b142a; color:#e5e7eb; border-radius:999px; padding:8px 12px; font-weight:600; cursor:pointer; transition:transform .06s ease, filter .2s ease, background .15s ease, color .15s ease}
+.toggle:active{transform:translateY(1px)}
+.toggle.active{background:var(--accent); color:white; border-color:transparent; box-shadow:0 6px 14px rgba(255,46,46,.25)}

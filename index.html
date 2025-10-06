@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Juego del Impostor – Fútbol & Clash Royale (v4)</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>Juego del Impostor <span class="hint">(local • un teléfono)</span></h1>
+      <div class="row compact">
+        <label style="margin-right:8px">Tema:</label>
+        <select id="themeSelect" class="select">
+          <option value="classic" selected>Clásico</option>
+          <option value="opifex">Opifex (rojos)</option>
+          <option value="dark">Negro intenso</option>
+        </select>
+        <button class="btn ghost" id="btnHome" style="display:none">🏠 Inicio</button>
+      </div>
+    </header>
+
+    <!-- SETUP -->
+    <section id="screen-setup" class="card">
+      <h2 class="title">Configuración</h2>
+      <div class="row">
+        <div class="col">
+          <label>Jugadores / Nombres (uno por línea)</label>
+          <textarea id="playersInput" placeholder="Lucho
+Pedro
+Tizi
+Spa
+Rulo
+Lucas"></textarea>
+          <div class="hint">Podés pegar listas. Se ignoran líneas vacías y duplicados exactos.</div>
+          <div class="divider"></div>
+
+          <h3 class="subtitle">Modo Fútbol & Clash Royale (precargados)</h3>
+
+          <!-- BOTONES DE MODO -->
+          <div id="presetButtons" class="toggle-group">
+            <div class="group-label">⚽ Fútbol</div>
+            <button class="toggle" data-key="equipos_arg">Equipos argentinos</button>
+            <button class="toggle" data-key="equipos_mundo">Equipos del mundo</button>
+            <button class="toggle" data-key="jugadores_arg">Jugadores ARG (actuales)</button>
+            <button class="toggle" data-key="jugadores_mundo">Jugadores mundo (actuales)</button>
+            <button class="toggle" data-key="leyendas">Leyendas / históricos</button>
+
+            <div class="group-label" style="margin-top:8px">🏰 Clash Royale</div>
+            <button class="toggle" data-key="clash_all">Todas las cartas (ES)</button>
+            <button class="toggle" data-key="clash_comunes">Comunes</button>
+            <button class="toggle" data-key="clash_especiales">Especiales</button>
+            <button class="toggle" data-key="clash_epicas">Épicas</button>
+            <button class="toggle" data-key="clash_legendarias">Legendarias</button>
+            <button class="toggle" data-key="clash_campeones">Campeones</button>
+          </div>
+
+          <div class="row compact">
+            <button class="btn secondary" id="btnAddPreset">Agregar seleccionados</button>
+            <button class="btn ghost" id="btnClearPreset">Limpiar selección</button>
+          </div>
+          <div class="hint">Podés combinar varias opciones; no se repiten nombres.</div>
+        </div>
+
+        <div class="col">
+          <div class="row">
+            <div class="col">
+              <label>Cantidad de impostores</label>
+              <input type="number" id="impostorsInput" min="1" max="5" value="1" />
+            </div>
+            <div class="col">
+              <label>¿Mostrar palabra al civil?</label>
+              <select id="showWordSelect" class="select">
+                <option value="yes" selected>Sí, mostrar</option>
+                <option value="no">No, solo rol</option>
+              </select>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <label>Palabra secreta del civil (opcional)</label>
+          <input id="secretWordInput" type="text" placeholder="Ej: RIVER" />
+          <div class="hint">Si la dejás vacía, se elige una al azar de las categorías seleccionadas.</div>
+          <div class="divider"></div>
+          <div class="row">
+            <button class="btn" id="btnStart">Iniciar partida</button>
+            <button class="btn ghost" id="btnDemo">Cargar demo</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- REVEAL ROLES -->
+    <section id="screen-reveal" class="card hidden">
+      <div class="topbar">
+        <span class="chip" id="roundInfo">Revelación de roles</span>
+        <button class="btn secondary" id="btnBackOne">◀ Volver un jugador</button>
+        <button class="btn ghost" id="btnSkipToMeeting">Saltar a reunión</button>
+      </div>
+      <div class="center">
+        <p class="sub">Turno de</p>
+        <div class="big" id="revealPlayer">Jugador</div>
+        <div style="height:12px"></div>
+        <div id="revealContent"></div>
+        <div style="height:16px"></div>
+        <button class="btn" id="btnShow">Mostrar mi rol</button>
+        <button class="btn secondary hidden" id="btnHide">Ocultar y pasar el teléfono ➜</button>
+      </div>
+    </section>
+
+    <!-- MEETING / VOTING -->
+    <section id="screen-meeting" class="card hidden">
+      <div class="topbar">
+        <span class="chip" id="aliveInfo">Vivos: 0</span>
+        <div class="row compact">
+          <button class="btn ghost" id="btnCallVote">Abrir votación</button>
+          <button class="btn secondary" id="btnSummary">Resumen</button>
+          <button class="btn warn" id="btnRegisterKill">Registrar kill</button>
+        </div>
+      </div>
+      <h2 class="title">Reunión</h2>
+      <div class="players-grid" id="playersList"></div>
+      <div class="divider"></div>
+      <div class="row">
+        <button class="btn" id="btnStartVote">Iniciar votación</button>
+        <button class="btn secondary" id="btnNextRound">Siguiente ronda (sin eliminar)</button>
+      </div>
+      <div class="divider"></div>
+      <details>
+        <summary class="hint">Ver registro de eventos</summary>
+        <ul id="eventLog" class="log"></ul>
+      </details>
+    </section>
+
+    <!-- VOTE -->
+    <section id="screen-vote" class="card hidden">
+      <div class="topbar">
+        <span class="chip" id="voteRound">Ronda</span>
+        <button class="btn ghost" id="btnCancelVote">Cancelar</button>
+      </div>
+      <h2 class="title">Votación</h2>
+      <div class="vote-grid" id="voteGrid"></div>
+      <div class="divider"></div>
+      <div class="row">
+        <button class="btn" id="btnCloseVote">Cerrar votación</button>
+      </div>
+    </section>
+
+    <!-- ROUND SUMMARY (only eliminated) -->
+    <section id="screen-round-summary" class="card hidden">
+      <div class="topbar">
+        <span class="chip" id="sumRoundChip">Resumen ronda</span>
+        <button class="btn ghost" id="btnSummaryContinue">Continuar</button>
+      </div>
+      <h2 class="title">Resultado de la votación</h2>
+      <div id="summaryBody"></div>
+    </section>
+
+    <!-- RESULTS / END -->
+    <section id="screen-results" class="card hidden">
+      <div class="center">
+        <div class="winner" id="winnerText">Ganó…</div>
+        <p class="sub" id="winnerSub"></p>
+        <div class="divider"></div>
+        <button class="btn" id="btnNewGame">Nueva partida</button>
+      </div>
+    </section>
+
+    <div class="footer center">Hecho para pasar el celu y jugar en casa • Offline</div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
