@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Imposthor – Fiesta con Amigos</title>
+  <style>
+    :root{
+      --bg:#0b1223; --panel:#0f172a; --panel-2:#0b1328; --text:#e5e7eb; --muted:#94a3b8; --line:#1f2937; --accent:#ff2e2e;
+      --ok:#22c55e; --warn:#facc15; --shadow:0 10px 30px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family:Inter,system-ui,Arial,sans-serif;background:radial-gradient(1200px 800px at 80% -10%, #111a33 0%, var(--bg) 40%);color:var(--text)}
+    .container{max-width:1100px;margin:0 auto;padding:24px;padding-left:clamp(12px,3vw,24px);padding-right:clamp(12px,3vw,24px)}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    header h1{margin:0;font-size:clamp(20px,3.5vw,32px);letter-spacing:.5px;color:var(--accent)}
+    .brand{display:flex;align-items:center;gap:10px}
+    .logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#b22222);box-shadow:var(--shadow);display:grid;place-items:center;font-weight:800}
+    .card{background:linear-gradient(180deg,var(--panel),var(--panel-2));border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);backdrop-filter:blur(6px)}
+    .card .content{padding:20px}
+    .grid{display:grid;gap:16px}
+    .grid.cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .grid.cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .grid.auto{grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
+    @media (max-width:900px){.grid.cols-2{grid-template-columns:1fr}.grid.cols-3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media (max-width:640px){.grid.cols-3{grid-template-columns:1fr}}
+    .btn{border:none;border-radius:14px;padding:12px 16px;min-height:44px;cursor:pointer;font-weight:800;box-shadow:var(--shadow);background:linear-gradient(135deg,#ffffff,#d1d5db);color:#0b0f1a;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+    .btn.primary{background:linear-gradient(135deg,var(--accent),#ff6b6b);color:#fff}
+    .btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
+    .btn.success{background:linear-gradient(135deg,var(--ok),#86efac)}
+    .btn.warning{background:linear-gradient(135deg,var(--warn),#fde047)}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .center{text-align:center}
+    .spacer{height:14px}
+    .muted{color:var(--muted)}
+    .title{font-size:clamp(18px,2.6vw,26px);margin:0 0 8px}
+    input[type="text"]{width:100%;padding:12px 14px;border-radius:12px;background:#0c162c;border:1px solid #1f2b46;color:var(--text);font-size:clamp(14px,3.6vw,16px)}
+    .players{display:flex;flex-wrap:wrap;gap:10px}
+    .pill{background:#0d1a33;border:1px solid #1f2b46;color:var(--text);border-radius:999px;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .pill .x{cursor:pointer;opacity:.85}
+    .chip{padding:10px 12px;border-radius:999px;border:1px solid var(--line);background:linear-gradient(135deg,#0f213f,#0b1731);font-size:14px}
+    .selectable{border:1px solid var(--line);background:#101b34;padding:12px;border-radius:12px;cursor:pointer;transition:border .15s ease,transform .08s ease,box-shadow .15s ease}
+    .selectable:hover{transform:translateY(-1px)}
+    .selectable.selected{border:2px solid var(--accent);box-shadow:0 0 0 3px rgba(255,46,46,.15) inset,0 6px 18px rgba(255,46,46,.18)}
+    .notice{padding:12px 14px;border-radius:12px;background:#0c182e;border:1px dashed #23314f}
+    .big{font-size:clamp(22px,6vw,38px);font-weight:900;letter-spacing:.5px;margin:6px 0;word-break:break-word}
+    .list{list-style:none;margin:0;padding:0}
+    .list li{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid #172033}
+    .footer-nav{display:flex;justify-content:space-between;gap:10px;margin-top:16px;position:sticky;bottom:0;background:linear-gradient(180deg,transparent,rgba(11,18,35,.8));backdrop-filter:blur(6px);padding:8px 0}
+    .hidden{display:none !important}
+    /* Votación: texto destacado */
+    .vote-instructions{color:#fbbf24;font-weight:800;letter-spacing:.3px}
+    .vote-instructions::before{content:"⚠️ ";}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand"><div class="logo">🕵️</div><h1>Imposthor – Fiesta con Amigos</h1></div>
+      <div class="row">
+        <button class="btn ghost" id="btnBackMenu">Menú</button>
+        <button class="btn ghost" id="btnReset">Reiniciar</button>
+      </div>
+    </header>
+
+    <!-- MENÚ PRINCIPAL -->
+    <section id="screen-menu" class="grid cols-2">
+      <div class="card"><div class="content">
+        <h2 class="title">Crear partida rápida</h2>
+        <p class="muted">Juego local en un solo dispositivo. Revelen rol, discutan y definan en grupo.</p>
+        <div class="spacer"></div>
+        <div class="row">
+          <button class="btn primary" id="createQuick">Crear partida</button>
+          <span class="chip" id="roomCode">Sala — — —</span>
+        </div>
+        <div class="spacer"></div>
+        <div class="notice">Tip: elegí <strong>categorías</strong>. Todos reciben la misma palabra excepto el <strong>Impostor</strong>, que recibe <em>???</em>.</div>
+      </div></div>
+      <div class="card"><div class="content">
+        <h2 class="title">Cómo se juega</h2>
+        <ul class="list">
+          <li><span>1) Agregá jugadores</span><span>👥</span></li>
+          <li><span>2) Elegí categorías</span><span>🗂️</span></li>
+          <li><span>3) Elegí la palabra</span><span>🔀</span></li>
+          <li><span>4) Revelá con <em>Mostrar</em></span><span>📱</span></li>
+          <li><span>5) Discusión y decisión grupal</span><span>🗳️</span></li>
+          <li><span>6) Resultado y condición de victoria</span><span>🏆</span></li>
+        </ul>
+      </div></div>
+    </section>
+
+    <!-- LOBBY -->
+    <section id="screen-lobby" class="hidden">
+      <div class="grid cols-2">
+        <div class="card"><div class="content">
+          <h2 class="title">Jugadores</h2>
+          <div class="row">
+            <input id="playerName" type="text" maxlength="14" placeholder="Agregar jugador (Enter)" />
+            <button class="btn" id="addPlayer">Agregar</button>
+          </div>
+          <div class="spacer"></div>
+          <div class="players" id="players"></div>
+          <div class="spacer"></div>
+          <span class="muted">Mínimo 3 jugadores (máximo 16).</span>
+        </div></div>
+        <div class="card"><div class="content">
+          <h2 class="title">Categorías</h2>
+          <div id="categories" class="grid cols-3"></div>
+          <div class="spacer"></div>
+          <div class="row">
+            <button class="btn ghost" id="toggleAllCats">Seleccionar todas</button>
+            <span class="muted">Elegí al menos 1</span>
+          </div>
+          <div class="spacer"></div>
+          <h3 class="title" style="margin-top:8px">Impostores</h3>
+          <div class="row" id="impostorPicker">
+            <label class="chip"><input type="radio" name="impostors" value="1" checked style="margin-right:8px"> 1 impostor</label>
+            <label class="chip"><input type="radio" name="impostors" value="2" style="margin-right:8px"> 2 impostores</label>
+            <label class="chip"><input type="radio" name="impostors" value="3" style="margin-right:8px"> 3 impostores</label>
+          </div>
+        </div></div>
+      </div>
+      <div class="footer-nav">
+        <button class="btn ghost" id="backMenu2">⬅️ Menú</button>
+        <div class="row">
+          <button class="btn warning" id="btnShuffle">🔀 Elegir palabra</button>
+          <button class="btn primary" id="startRound" disabled>▶️ Iniciar ronda</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- REVEAL -->
+    <section id="screen-reveal" class="hidden">
+      <div class="card"><div class="content center">
+        <div class="muted">Jugador</div>
+        <div class="big" id="revealPlayer">—</div>
+        <div class="spacer"></div>
+        <div class="notice" id="revealCard">Toquen <strong>Mostrar</strong> para ver su palabra/rol</div>
+        <div class="spacer"></div>
+        <div class="row center" style="justify-content:center;gap:12px;flex-wrap:wrap">
+          <button class="btn" id="btnShow" style="flex:1 1 200px;max-width:360px">Mostrar</button>
+          <button class="btn ghost" id="btnNext" style="flex:1 1 200px;max-width:360px">Siguiente ▶️</button>
+        </div>
+        <div class="spacer"></div>
+        <div class="muted">Consejo: no digas tu palabra en voz alta 😉</div>
+      </div></div>
+    </section>
+
+    <!-- DISCUSIÓN -->
+    <section id="screen-discuss" class="hidden">
+      <div class="card"><div class="content center">
+        <h2 class="title">¡A debatir!</h2>
+        <p class="muted">Hablen 1–3 minutos. Cuando estén listos, pasen a votar.</p>
+        <div class="spacer"></div>
+        <button class="btn primary" id="goVote">🗳️ Ir a votar</button>
+      </div></div>
+    </section>
+
+    <!-- VOTACIÓN (GRUPAL) -->
+    <section id="screen-vote" class="hidden">
+      <div class="card"><div class="content">
+        <div class="row" style="justify-content:space-between">
+          <div class="chip">👥 Vivos: <strong id="playersLeft">—</strong></div>
+          <div class="chip">🎭 Impostores: <strong id="impostorsLeft">—</strong></div>
+        </div>
+        <div class="spacer"></div>
+        <div class="vote-instructions">Elijan en persona y luego toquen al acusado:</div>
+        <div class="spacer"></div>
+        <div id="voteList" class="grid auto"></div>
+        <div class="spacer"></div>
+        <div class="row">
+          <button class="btn success" id="confirmVote">Confirmar decisión</button>
+          <button class="btn ghost" id="skipVote">No eliminar</button>
+        </div>
+      </div></div>
+    </section>
+
+    <!-- RESULTADOS -->
+    <section id="screen-results" class="hidden">
+      <div class="card"><div class="content center">
+        <h2 class="title">Resultados</h2>
+        <div id="resultsBox"></div>
+        <div class="spacer"></div>
+        <div class="row center" style="justify-content:center">
+          <button class="btn primary hidden" id="continueRound">Continuar</button>
+          <button class="btn" id="playAgain">🔁 Nueva ronda</button>
+          <button class="btn ghost" id="toLobby">Lobby</button>
+        </div>
+      </div></div>
+    </section>
+  </div>
+
+  <script>
+    // ====== Palabras (categorías) ======
+    const wordPools = {
+      "Clubes ARG": [
+        "River Plate","Boca Juniors","Racing","Independiente","San Lorenzo","Huracán","Vélez","Estudiantes LP","Gimnasia LP","Newell's","Rosario Central","Talleres","Belgrano","Lanús","Banfield","Argentinos Juniors","Defensa y Justicia","Godoy Cruz","Colón","Unión",
+        "Atlético Tucumán","Central Córdoba","Sarmiento","Platense","Tigre","Arsenal de Sarandí","Instituto","Barracas Central","Deportivo Riestra","Almirante Brown"
+      ],
+      "Clubes Mundo": [
+        "Real Madrid","Barcelona","Atlético de Madrid","Sevilla","Valencia","Manchester United","Manchester City","Liverpool","Arsenal","Chelsea","Tottenham","Bayern Munich","Borussia Dortmund","PSG","AC Milan","Inter","Juventus","Napoli","Benfica","Porto",
+        "Sporting CP","Ajax","Feyenoord","PSV","Roma","Lazio","Marseille","Lyon","Leverkusen","RB Leipzig"
+      ],
+      "Jugadores ARG": [
+        "Messi","Di María","Dibu Martínez","De Paul","Enzo Fernández","Julián Álvarez","Lautaro Martínez","Paredes","Otamendi","Cuti Romero","Garnacho","Mac Allister","Lo Celso","Tagliafico","Molina","Palacios","Montiel","Barco","Thiago Almada","Diablito Echeverri",
+        "Nico González","Buendía","Martínez Quarta","Dybala","Correa","Foyth","Papu Gómez","Mascherano","Pastore","Aimar"
+      ],
+      "Jugadores Mundo (actuales)": [
+        "Kylian Mbappé","Erling Haaland","Kevin De Bruyne","Cristiano Ronaldo","Neymar Jr","Jude Bellingham",
+        "Vinícius Júnior","Rodrygo","Mohamed Salah","Harry Kane","Robert Lewandowski","Karim Benzema",
+        "Luka Modrić","Pedri","Gavi","Rodri","Bernardo Silva","Bruno Fernandes","Bukayo Saka",
+        "Phil Foden","Jamal Musiala","Florian Wirtz","Joshua Kimmich","İlkay Gündoğan","Frenkie de Jong",
+        "Martin Ødegaard","Federico Valverde","Rafael Leão","João Félix","Victor Osimhen","Khvicha Kvaratskhelia",
+        "Heung-min Son","Antoine Griezmann","Ousmane Dembélé","Achraf Hakimi","Rúben Dias","Virgil van Dijk",
+        "Alphonso Davies","Thibaut Courtois","Alisson Becker","Ederson","Marc-André ter Stegen","Bruno Guimarães",
+        "Nicolò Barella","Declan Rice","Gabriel Martinelli","Darwin Núñez","Kai Havertz","Federico Chiesa","Leroy Sané"
+      ],
+      "Leyendas": [
+        "Maradona","Pelé","Zidane","Ronaldinho","Ronaldo Nazário","Cruyff","Beckenbauer","Maldini","Xavi","Iniesta","Henry","Baggio","Figo","Romário","Shevchenko","Rooney","Ibrahimović","Roberto Carlos","Cafu","Totti",
+        "Nedvěd","Gattuso","Pirlo","Kaká","Eto'o","Cannavaro","Del Piero","Stoichkov","Van Basten","Platini"
+      ],
+      "Clash Royale": [
+        "Caballero","Arqueras","Gigante","Mini P.E.K.K.A.","Bebé Dragón","Mago","Horda de Esbirros","Montapuercos","Valquiria","Mago de Hielo","Leñador","Bandida","Megacaballero","P.E.K.K.A.","Cementerio","Globo Bombástico","Sabueso de Lava","Minero","Chispitas","Bruja Nocturna","Arquero Mágico","Monje","Campeón Dorado","Reina Arquera","Esqueleto Gigante","Príncipe","Príncipe Oscuro","Barril de Duendes","Duendes con Lanza","Cañón con Ruedas","Tesla","Tornado","Descarga","Bola de Fuego","Cohete","Veneno","Rayo","Tronco","Flechas",
+        "Fantasma Real","Carruaje de Cañón","Pescador","Dragón Eléctrico","Dragones Esqueleto","Fénix","Guardias","Mortero","Ballesta"
+      ],
+      "Países": [
+        "Estados Unidos","China","India","Brasil","Rusia","Reino Unido","Francia","Alemania","Italia","España",
+        "Canadá","México","Japón","Corea del Sur","Australia","Argentina","Chile","Colombia","Perú","Uruguay",
+        "Portugal","Países Bajos","Bélgica","Suiza","Suecia","Noruega","Dinamarca","Finlandia","Polonia","Austria",
+        "Irlanda","Grecia","República Checa","Hungría","Turquía","Israel","Arabia Saudita","Emiratos Árabes Unidos","Qatar","Egipto",
+        "Marruecos","Sudáfrica","Nigeria","Kenia","Argelia","Etiopía","Ghana","Indonesia","Tailandia","Vietnam"
+      ]
+    };
+
+    // ====== Estado ======
+    const state = {
+      room: null,
+      players: [],
+      selectedCategories: new Set(),
+      usedWords: new Set(),
+      currentWord: null,
+      impostorIdxs: [],        // índices de impostores
+      impostorCount: 1,        // configurable en lobby
+      alive: [],
+      revealStep: 0,
+      revealed: false,
+      selectedAccused: null,
+    };
+
+    // ====== Helpers ======
+    const $ = sel => document.querySelector(sel);
+    const randInt = n => Math.floor(Math.random()*n);
+    const choice = arr => arr[Math.floor(Math.random()*arr.length)];
+    const genRoom = () => Array.from({length:4},()=>"ABCDEFGHJKLMNPQRSTUVWXYZ23456789"[randInt(32)]).join('');
+    const escapeHtml = str => String(str).replace(/[&<>"']/g, s=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[s]));
+    function getImpostorNames(){ return state.impostorIdxs.map(i=>state.players[i]).filter(Boolean); }
+
+    const save = () => localStorage.setItem('imposthor-lite', JSON.stringify({players:state.players, used:[...state.usedWords]}));
+    const load = () => {
+      try{ const d = JSON.parse(localStorage.getItem('imposthor-lite')||'{}');
+        if(Array.isArray(d.players)) state.players = d.players.slice(0,16);
+        if(Array.isArray(d.used)) state.usedWords = new Set(d.used);
+      }catch{}
+    };
+
+    // ====== Navegación / Render ======
+    function show(id){
+      ["#screen-menu","#screen-lobby","#screen-reveal","#screen-discuss","#screen-vote","#screen-results"].forEach(s=>$(s).classList.add('hidden'));
+      $(id).classList.remove('hidden');
+    }
+
+    function renderPlayers(){
+      const wrap = $('#players'); wrap.innerHTML='';
+      state.players.forEach((name,i)=>{
+        const el = document.createElement('div');
+        el.className='pill';
+        el.innerHTML = `<span>${escapeHtml(name)}</span> <span class="x" title="Quitar" data-i="${i}">✖</span>`;
+        wrap.appendChild(el);
+      });
+    }
+
+    function renderCategories(){
+      const box = $('#categories'); box.innerHTML='';
+      Object.keys(wordPools).forEach(cat=>{
+        const el = document.createElement('div');
+        el.className='selectable';
+        el.dataset.cat = cat;
+        el.innerHTML = `<strong>${cat}</strong><div class="muted">${wordPools[cat].length} palabras</div>`;
+        if(state.selectedCategories.has(cat)) el.classList.add('selected');
+        box.appendChild(el);
+      });
+    }
+
+    function updateStartButton(){
+      const ok = state.players.length>=3 && state.selectedCategories.size>0 && !!state.currentWord;
+      const btn = $('#startRound');
+      if(btn) btn.disabled = !ok;
+    }
+
+    // ====== Juego ======
+    function pickWord(){
+      let pool = [];
+      for (const cat of state.selectedCategories){ pool = pool.concat(wordPools[cat]||[]); }
+      const fresh = pool.filter(w => !state.usedWords.has(w));
+      const usable = fresh.length>0 ? fresh : pool;
+      if(usable.length===0){ alert('No hay palabras en las categorías seleccionadas.'); return; }
+      state.currentWord = choice(usable);
+      state.usedWords.add(state.currentWord);
+      save();
+    }
+
+    function startRound(){
+      // elegir impostores únicos según selección (mín 1, máx jugadores-1)
+      const desired = Math.max(1, Math.min(state.impostorCount, Math.max(1, state.players.length-1)));
+      const chosen = new Set();
+      while(chosen.size < desired){ chosen.add(randInt(state.players.length)); }
+      state.impostorIdxs = Array.from(chosen);
+      state.impostorCount = state.impostorIdxs.length;
+
+      state.alive = Array(state.players.length).fill(true);
+      state.revealStep = 0;
+      state.revealed = false;
+      show('#screen-reveal');
+      renderReveal();
+    }
+
+    function renderReveal(){
+      const i = state.revealStep;
+      const name = state.players[i] || '—';
+      $('#revealPlayer').textContent = name;
+      state.revealed = false;
+      $('#btnShow').disabled = false;
+      $('#revealCard').innerHTML = 'Toquen <strong>Mostrar</strong> para ver su palabra/rol';
+    }
+
+    function nextReveal(){
+      if(!state.revealed){ alert('Primero toca "Mostrar" para ver tu rol.'); return; }
+      if(state.revealStep < state.players.length-1){
+        state.revealStep++;
+        renderReveal();
+      } else {
+        show('#screen-discuss');
+      }
+    }
+
+    function beginVoting(){
+      state.selectedAccused = null;
+      show('#screen-vote');
+      renderVote();
+    }
+
+    function renderVote(){
+      const playersLeft = state.alive.filter(Boolean).length;
+      $('#playersLeft').textContent = playersLeft;
+      $('#impostorsLeft').textContent = state.impostorCount;
+      const list = $('#voteList'); list.innerHTML='';
+      state.players.forEach((name,i)=>{
+        if(!state.alive[i]) return; // solo vivos
+        const b = document.createElement('button');
+        b.className = 'btn selectable' + (state.selectedAccused===i ? ' selected' : '');
+        b.style.textAlign='left';
+        b.innerHTML = `👤 ${escapeHtml(name)}`;
+        b.onclick = ()=>{ state.selectedAccused = i; renderVote(); };
+        list.appendChild(b);
+      });
+    }
+
+    function confirmVote(){
+      if(state.selectedAccused==null){ alert('Elegí a quién acusan.'); return; }
+      const accused = state.selectedAccused;
+      state.alive[accused] = false; // eliminado
+      const wasImpostor = state.impostorIdxs.includes(accused);
+      if(wasImpostor){
+        state.impostorCount--;
+        state.impostorIdxs = state.impostorIdxs.filter(x=>x!==accused);
+      }
+      showResultsAfterVote(accused, wasImpostor);
+    }
+
+    function showResultsAfterVote(accused, wasImpostor){
+      const playersLeft = state.alive.filter(Boolean).length;
+      const crewLeft = playersLeft - state.impostorCount; // tripulantes vivos
+      const accusedText = accused==null? 'Nadie' : state.players[accused];
+
+      // Condición de victoria: tripulantes si impostorCount==0; impostores si impostorCount==crewLeft
+      let outcome = null; // 'crew' | 'impostors' | null (sigue)
+      if(state.impostorCount === 0){
+        outcome = 'crew';
+      } else if(state.impostorCount === crewLeft){
+        outcome = 'impostors';
+      }
+
+      const verdict = accused==null
+        ? '⏸️ Decidieron no eliminar a nadie'
+        : (wasImpostor ? '✅ Era el IMPOSTOR' : '❌ No era el impostor');
+
+      let statusLine = `👥 Vivos: <strong>${playersLeft}</strong> | 🎭 Impostores restantes: <strong>${state.impostorCount}</strong>`;
+      if(outcome==='crew') statusLine += ' — 🏆 Ganan los tripulantes';
+      if(outcome==='impostors') statusLine += ' — 🏴 Ganan los impostores';
+
+      const impostorsLine = outcome==='impostors' ? `<p class="muted">Impostor(es): <strong>${getImpostorNames().map(escapeHtml).join(', ')}</strong></p>` : '';
+
+      $('#resultsBox').innerHTML = `
+        <p class="muted">Palabra de la ronda:</p>
+        <div class="big">${escapeHtml(state.currentWord)}</div>
+        <div class="spacer"></div>
+        <p>Acusado: <strong>${escapeHtml(accusedText)}</strong></p>
+        <p>${verdict}</p>
+        ${impostorsLine}
+        <div class="spacer"></div>
+        <div class="chip">${statusLine}</div>
+      `;
+
+      // Botones según estado
+      const btnCont = document.getElementById('continueRound');
+      const btnAgain = document.getElementById('playAgain');
+      if(outcome===null){
+        btnCont.classList.remove('hidden');
+        btnAgain.classList.add('hidden');
+      } else {
+        btnCont.classList.add('hidden');
+        btnAgain.classList.remove('hidden');
+      }
+
+      show('#screen-results');
+    }
+
+    // ====== Eventos UI ======
+    $('#createQuick').addEventListener('click', () => {
+      state.room = genRoom();
+      $('#roomCode').textContent = `Sala ${state.room}`;
+      show('#screen-lobby');
+      renderPlayers();
+      renderCategories();
+      // radios de impostores
+      document.querySelectorAll('input[name="impostors"]').forEach(r=>{
+        r.addEventListener('change',()=>{
+          const val = parseInt(r.value,10);
+          state.impostorCount = isNaN(val)?1:val;
+        });
+      });
+      updateStartButton();
+    });
+
+    $('#backMenu2').addEventListener('click', () => show('#screen-menu'));
+    $('#btnBackMenu').addEventListener('click', () => show('#screen-menu'));
+    $('#btnReset').addEventListener('click', () => {
+      if(confirm('¿Seguro que querés reiniciar la aplicación?')){
+        localStorage.removeItem('imposthor-lite');
+        location.reload();
+      }
+    });
+
+    $('#playerName').addEventListener('keydown', e=>{ if(e.key==='Enter') addPlayer(); });
+    $('#addPlayer').addEventListener('click', addPlayer);
+
+    function addPlayer(){
+      const name = $('#playerName').value.trim();
+      if(!name) return;
+      if(state.players.includes(name)) { alert('Ese nombre ya está en la lista.'); return; }
+      if(state.players.length>=16) { alert('Máximo 16 jugadores.'); return; }
+      state.players.push(name);
+      $('#playerName').value='';
+      renderPlayers();
+      updateStartButton();
+      save();
+    }
+
+    $('#players').addEventListener('click', e=>{
+      if(e.target.classList.contains('x')){
+        const i = +e.target.getAttribute('data-i');
+        state.players.splice(i,1);
+        renderPlayers();
+        updateStartButton();
+        save();
+      }
+    });
+
+    $('#categories').addEventListener('click', e=>{
+      const item = e.target.closest('.selectable');
+      if(!item) return;
+      const cat = item.getAttribute('data-cat');
+      if(state.selectedCategories.has(cat)) state.selectedCategories.delete(cat); else state.selectedCategories.add(cat);
+      item.classList.toggle('selected');
+      updateStartButton();
+    });
+
+    $('#toggleAllCats').addEventListener('click', () => {
+      const all = Object.keys(wordPools);
+      const allSelected = all.every(c=>state.selectedCategories.has(c));
+      state.selectedCategories = new Set(allSelected?[]:all);
+      renderCategories();
+      updateStartButton();
+    });
+
+    $('#btnShuffle').addEventListener('click', () => {
+      if(state.selectedCategories.size===0) { alert('Elegí al menos una categoría.'); return; }
+      pickWord(); updateStartButton(); alert('Palabra elegida para la ronda.');
+    });
+
+    $('#startRound').addEventListener('click', () => {
+      if(!(state.players.length>=3)) { alert('Mínimo 3 jugadores.'); return; }
+      if(state.selectedCategories.size===0) { alert('Seleccioná categorías.'); return; }
+      if(!state.currentWord) pickWord();
+      startRound();
+    });
+
+    $('#btnShow').addEventListener('click', () => {
+      if(state.revealed) return;
+      const i = state.revealStep;
+      const isImp = state.impostorIdxs.includes(i);
+      const text = isImp
+        ? 'Eres el <strong>IMPOSTOR</strong><br/><span class="muted">Tu palabra es: <em>???</em></span>'
+        : `Tu palabra es: <strong>${escapeHtml(state.currentWord)}</strong>`;
+      $('#revealCard').innerHTML = `<div class="notice">${text}</div>`;
+      state.revealed = true;
+      $('#btnShow').disabled = true;
+    });
+
+    $('#btnNext').addEventListener('click', nextReveal);
+    $('#goVote').addEventListener('click', beginVoting);
+    $('#confirmVote').addEventListener('click', confirmVote);
+    $('#skipVote').addEventListener('click', () => { showResultsAfterVote(null,false); });
+    $('#continueRound').addEventListener('click', () => { beginVoting(); });
+    $('#playAgain').addEventListener('click', () => { pickWord(); startRound(); });
+    $('#toLobby').addEventListener('click', () => { show('#screen-lobby'); updateStartButton(); });
+
+    // init
+    load();
+    renderCategories();
+  </script>
+</body>
+</html>
