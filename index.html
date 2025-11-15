@@ -40,7 +40,7 @@
     .pill{background:#0d1a33;border:1px solid #1f2b46;color:var(--text);border-radius:999px;padding:8px 12px;display:flex;align-items:center;gap:8px}
     .pill .x{cursor:pointer;opacity:.85}
     .chip{padding:10px 12px;border-radius:999px;border:1px solid var(--line);background:linear-gradient(135deg,#0f213f,#0b1731);font-size:14px}
-    .selectable{border:1px solid var(--line);background:#101b34;padding:12px;border-radius:12px;cursor:pointer;transition:border .15s ease,transform .08s ease,box-shadow .15s ease}
+    .selectable{border:1px solid var(--line);background:#101b34;padding:12px;border-radius:12px;cursor:pointer;color:#ffffff;transition:border .15s ease,transform .08s ease,box-shadow .15s ease}
     .selectable:hover{transform:translateY(-1px)}
     .selectable.selected{border:2px solid var(--accent);box-shadow:0 0 0 3px rgba(255,46,46,.15) inset,0 6px 18px rgba(255,46,46,.18)}
     .notice{padding:12px 14px;border-radius:12px;background:#0c182e;border:1px dashed #23314f}
@@ -49,9 +49,17 @@
     .list li{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid #172033}
     .footer-nav{display:flex;justify-content:space-between;gap:10px;margin-top:16px;position:sticky;bottom:0;background:linear-gradient(180deg,transparent,rgba(11,18,35,.8));backdrop-filter:blur(6px);padding:8px 0}
     .hidden{display:none !important}
-    /* Votación: texto destacado */
     .vote-instructions{color:#fbbf24;font-weight:800;letter-spacing:.3px}
     .vote-instructions::before{content:"⚠️ ";}
+
+    /* Cartas Clash Royale */
+    .cards-toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+    .cards-toolbar .btn{min-height:36px;padding:8px 12px;font-size:13px}
+    #cardsGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:14px}
+    .cr-card{background:linear-gradient(180deg,#020617,#020818);border-radius:16px;border:1px solid var(--line);padding:12px;text-align:center;box-shadow:var(--shadow)}
+    .cr-card-img{width:90px;height:90px;object-fit:contain;margin-bottom:6px}
+    .cr-card-name{margin:4px 0 2px;font-size:14px;font-weight:800;color:#e5e7eb}
+    .cr-card-rareza{font-size:12px;color:var(--muted)}
   </style>
 </head>
 <body>
@@ -64,6 +72,13 @@
       </div>
     </header>
 
+    <!-- Banner de categorías activas -->
+    <div id="roundBanner" class="hidden" style="margin:12px 0;">
+      <div class="chip">
+        Categorías: <span id="roundCatsText"></span>
+      </div>
+    </div>
+
     <!-- MENÚ PRINCIPAL -->
     <section id="screen-menu" class="grid cols-2">
       <div class="card"><div class="content">
@@ -73,6 +88,10 @@
         <div class="row">
           <button class="btn primary" id="createQuick">Crear partida</button>
           <span class="chip" id="roomCode">Sala — — —</span>
+        </div>
+        <div class="spacer"></div>
+        <div class="row">
+          <button class="btn ghost" id="btnOpenCards">Cartas Clash Royale</button>
         </div>
         <div class="spacer"></div>
         <div class="notice">Tip: elegí <strong>categorías</strong>. Todos reciben la misma palabra excepto el <strong>Impostor</strong>, que recibe <em>???</em>.</div>
@@ -189,17 +208,39 @@
         </div>
       </div></div>
     </section>
+
+    <!-- CARTAS CLASH ROYALE -->
+    <section id="screen-cards" class="hidden">
+      <div class="card">
+        <div class="content">
+          <h2 class="title">Cartas Clash Royale (MockAPI)</h2>
+          <p class="muted">Se muestran cartas desde tus endpoints <code>comunes</code> y <code>cartas2</code>.</p>
+          <div class="spacer"></div>
+          <div class="cards-toolbar">
+            <button class="btn ghost" data-filter="all" id="btnFilterAll">Todas</button>
+            <button class="btn ghost" data-filter="Común" id="btnFilterComunes">Comunes</button>
+            <button class="btn ghost" data-filter="Especial" id="btnFilterEspeciales">Especiales</button>
+            <button class="btn ghost" data-filter="Épica" id="btnFilterEpicas">Épicas</button>
+            <button class="btn ghost" data-filter="Legendaria" id="btnFilterLegendarias">Legendarias</button>
+            <button class="btn ghost" data-filter="Campeón" id="btnFilterCampeones">Campeones</button>
+          </div>
+          <div class="spacer"></div>
+          <div id="cardsGrid"></div>
+        </div>
+      </div>
+      <div class="footer-nav">
+        <button class="btn ghost" id="backFromCards">⬅️ Menú</button>
+      </div>
+    </section>
   </div>
 
   <script>
     // ====== Palabras (categorías) ======
     const wordPools = {
-      "Clubes ARG": [
-        "River Plate","Boca Juniors","Racing","Independiente","San Lorenzo","Huracán","Vélez","Estudiantes LP","Gimnasia LP","Newell's","Rosario Central","Talleres","Belgrano","Lanús","Banfield","Argentinos Juniors","Defensa y Justicia","Godoy Cruz","Colón","Unión",
-        "Atlético Tucumán","Central Córdoba","Sarmiento","Platense","Tigre","Arsenal de Sarandí","Instituto","Barracas Central","Deportivo Riestra","Almirante Brown"
-      ],
+      "Clubes ARG": [], // ahora viene desde la API clubesarg
       "Clubes Mundo": [
-        "Real Madrid","Barcelona","Atlético de Madrid","Sevilla","Valencia","Manchester United","Manchester City","Liverpool","Arsenal","Chelsea","Tottenham","Bayern Munich","Borussia Dortmund","PSG","AC Milan","Inter","Juventus","Napoli","Benfica","Porto",
+        "Real Madrid","Barcelona","Atlético de Madrid","Sevilla","Valencia","Manchester United","Manchester City","Liverpool","Arsenal","Chelsea",
+        "Tottenham","Bayern Munich","Borussia Dortmund","PSG","AC Milan","Inter","Juventus","Napoli","Benfica","Porto",
         "Sporting CP","Ajax","Feyenoord","PSV","Roma","Lazio","Marseille","Lyon","Leverkusen","RB Leipzig"
       ],
       "Jugadores ARG": [
@@ -239,9 +280,9 @@
       players: [],
       selectedCategories: new Set(),
       usedWords: new Set(),
-      currentWord: null,
-      impostorIdxs: [],        // índices de impostores
-      impostorCount: 1,        // configurable en lobby
+      currentWord: null, // string o {tipo:"club",nombre,imagen}
+      impostorIdxs: [],
+      impostorCount: 1,
       alive: [],
       revealStep: 0,
       revealed: false,
@@ -253,12 +294,13 @@
     const randInt = n => Math.floor(Math.random()*n);
     const choice = arr => arr[Math.floor(Math.random()*arr.length)];
     const genRoom = () => Array.from({length:4},()=>"ABCDEFGHJKLMNPQRSTUVWXYZ23456789"[randInt(32)]).join('');
-    const escapeHtml = str => String(str).replace(/[&<>"']/g, s=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[s]));
+    const escapeHtml = str => String(str).replace(/[&<>"']/g, s=>({"&":"&amp;","<":"&lt;","&gt;":">","\"":"&quot;","'":"&#39;"}[s]));
     function getImpostorNames(){ return state.impostorIdxs.map(i=>state.players[i]).filter(Boolean); }
 
     const save = () => localStorage.setItem('imposthor-lite', JSON.stringify({players:state.players, used:[...state.usedWords]}));
     const load = () => {
-      try{ const d = JSON.parse(localStorage.getItem('imposthor-lite')||'{}');
+      try{
+        const d = JSON.parse(localStorage.getItem('imposthor-lite')||'{}');
         if(Array.isArray(d.players)) state.players = d.players.slice(0,16);
         if(Array.isArray(d.used)) state.usedWords = new Set(d.used);
       }catch{}
@@ -266,7 +308,9 @@
 
     // ====== Navegación / Render ======
     function show(id){
-      ["#screen-menu","#screen-lobby","#screen-reveal","#screen-discuss","#screen-vote","#screen-results"].forEach(s=>$(s).classList.add('hidden'));
+      ["#screen-menu","#screen-lobby","#screen-reveal","#screen-discuss","#screen-vote","#screen-results","#screen-cards"].forEach(
+        s=>$(s).classList.add('hidden')
+      );
       $(id).classList.remove('hidden');
     }
 
@@ -286,7 +330,8 @@
         const el = document.createElement('div');
         el.className='selectable';
         el.dataset.cat = cat;
-        el.innerHTML = `<strong>${cat}</strong><div class="muted">${wordPools[cat].length} palabras</div>`;
+        const extra = (cat === "Clubes ARG") ? 'API' : (wordPools[cat].length+" palabras");
+        el.innerHTML = `<strong>${cat}</strong><div class="muted">${extra}</div>`;
         if(state.selectedCategories.has(cat)) el.classList.add('selected');
         box.appendChild(el);
       });
@@ -298,20 +343,81 @@
       if(btn) btn.disabled = !ok;
     }
 
+    function updateRoundBanner(){
+      const banner = $('#roundBanner');
+      const textEl = $('#roundCatsText');
+      if(!banner || !textEl) return;
+      if(state.selectedCategories.size===0){
+        banner.classList.add('hidden');
+        textEl.textContent = '';
+        return;
+      }
+      const cats = Array.from(state.selectedCategories);
+      textEl.textContent = cats.join(' · ');
+      banner.classList.remove('hidden');
+    }
+
+    // ====== Clubes ARG (MockAPI) ======
+    const API_CLUBES_ARG = "https://6918a60a21a963594870c317.mockapi.io/clubesarg";
+
+    async function pickClubFromAPI(){
+      try{
+        const res = await fetch(API_CLUBES_ARG);
+        const data = await res.json();
+
+        if (!Array.isArray(data) || data.length === 0){
+          alert('No hay clubes en la API de Clubes ARG.');
+          return false;
+        }
+
+        const disponibles = data.filter(c => !state.usedWords.has(c.nombre));
+        const pool = disponibles.length ? disponibles : data;
+
+        const elegido = choice(pool);
+        const nombre = elegido.nombre || elegido.name || 'Club desconocido';
+
+        state.currentWord = {
+          tipo: 'club',
+          nombre,
+          imagen: elegido.imagen || elegido.image || ''
+        };
+
+        state.usedWords.add(nombre);
+        save();
+        return true;
+      }catch(e){
+        console.error(e);
+        alert('Error al obtener clubes desde la API.');
+        return false;
+      }
+    }
+
     // ====== Juego ======
-    function pickWord(){
+    async function pickWord(){
+      const soloClubesArg = state.selectedCategories.size === 1 && state.selectedCategories.has("Clubes ARG");
+
+      if (soloClubesArg){
+        const ok = await pickClubFromAPI();
+        return ok;
+      }
+
       let pool = [];
-      for (const cat of state.selectedCategories){ pool = pool.concat(wordPools[cat]||[]); }
+      for (const cat of state.selectedCategories){
+        pool = pool.concat(wordPools[cat] || []);
+      }
       const fresh = pool.filter(w => !state.usedWords.has(w));
       const usable = fresh.length>0 ? fresh : pool;
-      if(usable.length===0){ alert('No hay palabras en las categorías seleccionadas.'); return; }
+      if(usable.length===0){
+        alert('No hay palabras en las categorías seleccionadas.');
+        return false;
+      }
       state.currentWord = choice(usable);
       state.usedWords.add(state.currentWord);
       save();
+      return true;
     }
 
     function startRound(){
-      // elegir impostores únicos según selección (mín 1, máx jugadores-1)
       const desired = Math.max(1, Math.min(state.impostorCount, Math.max(1, state.players.length-1)));
       const chosen = new Set();
       while(chosen.size < desired){ chosen.add(randInt(state.players.length)); }
@@ -321,6 +427,7 @@
       state.alive = Array(state.players.length).fill(true);
       state.revealStep = 0;
       state.revealed = false;
+      updateRoundBanner();
       show('#screen-reveal');
       renderReveal();
     }
@@ -356,7 +463,7 @@
       $('#impostorsLeft').textContent = state.impostorCount;
       const list = $('#voteList'); list.innerHTML='';
       state.players.forEach((name,i)=>{
-        if(!state.alive[i]) return; // solo vivos
+        if(!state.alive[i]) return;
         const b = document.createElement('button');
         b.className = 'btn selectable' + (state.selectedAccused===i ? ' selected' : '');
         b.style.textAlign='left';
@@ -369,7 +476,7 @@
     function confirmVote(){
       if(state.selectedAccused==null){ alert('Elegí a quién acusan.'); return; }
       const accused = state.selectedAccused;
-      state.alive[accused] = false; // eliminado
+      state.alive[accused] = false;
       const wasImpostor = state.impostorIdxs.includes(accused);
       if(wasImpostor){
         state.impostorCount--;
@@ -380,11 +487,10 @@
 
     function showResultsAfterVote(accused, wasImpostor){
       const playersLeft = state.alive.filter(Boolean).length;
-      const crewLeft = playersLeft - state.impostorCount; // tripulantes vivos
+      const crewLeft = playersLeft - state.impostorCount;
       const accusedText = accused==null? 'Nadie' : state.players[accused];
 
-      // Condición de victoria: tripulantes si impostorCount==0; impostores si impostorCount==crewLeft
-      let outcome = null; // 'crew' | 'impostors' | null (sigue)
+      let outcome = null;
       if(state.impostorCount === 0){
         outcome = 'crew';
       } else if(state.impostorCount === crewLeft){
@@ -395,16 +501,40 @@
         ? '⏸️ Decidieron no eliminar a nadie'
         : (wasImpostor ? '✅ Era el IMPOSTOR' : '❌ No era el impostor');
 
+      let wordBlock = '';
+      if(outcome !== null){
+        let palabraMostrada = '';
+        if(state.currentWord){
+          if(typeof state.currentWord === 'object' && state.currentWord.tipo === 'club'){
+            palabraMostrada = state.currentWord.nombre || '';
+          } else {
+            palabraMostrada = String(state.currentWord);
+          }
+        }
+        if(palabraMostrada){
+          wordBlock = `
+            <p class="muted">Palabra de la ronda:</p>
+            <div class="big">${escapeHtml(palabraMostrada)}</div>
+            <div class="spacer"></div>
+          `;
+        }
+      } else {
+        wordBlock = `
+          <p class="muted">La palabra permanecerá oculta hasta que termine la partida.</p>
+          <div class="spacer"></div>
+        `;
+      }
+
       let statusLine = `👥 Vivos: <strong>${playersLeft}</strong> | 🎭 Impostores restantes: <strong>${state.impostorCount}</strong>`;
       if(outcome==='crew') statusLine += ' — 🏆 Ganan los tripulantes';
       if(outcome==='impostors') statusLine += ' — 🏴 Ganan los impostores';
 
-      const impostorsLine = outcome==='impostors' ? `<p class="muted">Impostor(es): <strong>${getImpostorNames().map(escapeHtml).join(', ')}</strong></p>` : '';
+      const impostorsLine = outcome==='impostors'
+        ? `<p class="muted">Impostor(es): <strong>${getImpostorNames().map(escapeHtml).join(', ')}</strong></p>`
+        : '';
 
       $('#resultsBox').innerHTML = `
-        <p class="muted">Palabra de la ronda:</p>
-        <div class="big">${escapeHtml(state.currentWord)}</div>
-        <div class="spacer"></div>
+        ${wordBlock}
         <p>Acusado: <strong>${escapeHtml(accusedText)}</strong></p>
         <p>${verdict}</p>
         ${impostorsLine}
@@ -412,9 +542,8 @@
         <div class="chip">${statusLine}</div>
       `;
 
-      // Botones según estado
-      const btnCont = document.getElementById('continueRound');
-      const btnAgain = document.getElementById('playAgain');
+      const btnCont = $('#continueRound');
+      const btnAgain = $('#playAgain');
       if(outcome===null){
         btnCont.classList.remove('hidden');
         btnAgain.classList.add('hidden');
@@ -426,6 +555,69 @@
       show('#screen-results');
     }
 
+    // ====== Cartas Clash Royale (MockAPI) ======
+    const API_COMUNES = "https://6917a7c721a96359486d94bb.mockapi.io/comunes";
+    const API_ALTAS  = "https://6917a7c721a96359486d94bb.mockapi.io/cartas2";
+
+    let allCards = [];
+
+    function getRarezaColor(r){
+      if (r === "Común") return "#b9b9b9";
+      if (r === "Especial") return "#4bc9ff";
+      if (r === "Épica") return "#c66bff";
+      if (r === "Legendaria") return "#ffb300";
+      if (r === "Campeón") return "#1e88e5";
+      return "#ffffff";
+    }
+
+    function renderCards(list){
+      const grid = document.getElementById("cardsGrid");
+      grid.innerHTML = "";
+      if(!list || list.length === 0){
+        grid.innerHTML = `<p class="muted">No se encontraron cartas para este filtro.</p>`;
+        return;
+      }
+      list.forEach(carta=>{
+        const card = document.createElement("div");
+        const color = getRarezaColor(carta.rareza);
+        card.className = "cr-card";
+        card.innerHTML = `
+          <img class="cr-card-img" src="${carta.imagen}" alt="${escapeHtml(carta.name)}">
+          <div class="cr-card-name" style="color:${color}">${escapeHtml(carta.name)}</div>
+          <div class="cr-card-rareza">${escapeHtml(carta.rareza || "")}</div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    async function loadCards(){
+      if(allCards.length) {
+        renderCards(allCards);
+        return;
+      }
+      const grid = document.getElementById("cardsGrid");
+      grid.innerHTML = `<p class="muted">Cargando cartas...</p>`;
+      try{
+        const [r1,r2] = await Promise.all([fetch(API_COMUNES), fetch(API_ALTAS)]);
+        const d1 = await r1.json();
+        const d2 = await r2.json();
+        allCards = [...d1, ...d2];
+        renderCards(allCards);
+      }catch(e){
+        console.error(e);
+        grid.innerHTML = `<p class="muted">Error al cargar las cartas.</p>`;
+      }
+    }
+
+    function filterCardsByRareza(rareza){
+      if(!allCards.length) return;
+      if(rareza === "all"){
+        renderCards(allCards);
+      } else {
+        renderCards(allCards.filter(c=>c.rareza === rareza));
+      }
+    }
+
     // ====== Eventos UI ======
     $('#createQuick').addEventListener('click', () => {
       state.room = genRoom();
@@ -433,7 +625,6 @@
       show('#screen-lobby');
       renderPlayers();
       renderCategories();
-      // radios de impostores
       document.querySelectorAll('input[name="impostors"]').forEach(r=>{
         r.addEventListener('change',()=>{
           const val = parseInt(r.value,10);
@@ -494,15 +685,22 @@
       updateStartButton();
     });
 
-    $('#btnShuffle').addEventListener('click', () => {
+    $('#btnShuffle').addEventListener('click', async () => {
       if(state.selectedCategories.size===0) { alert('Elegí al menos una categoría.'); return; }
-      pickWord(); updateStartButton(); alert('Palabra elegida para la ronda.');
+      const ok = await pickWord();
+      if(ok){
+        updateStartButton();
+        alert('Palabra elegida para la ronda.');
+      }
     });
 
-    $('#startRound').addEventListener('click', () => {
+    $('#startRound').addEventListener('click', async () => {
       if(!(state.players.length>=3)) { alert('Mínimo 3 jugadores.'); return; }
       if(state.selectedCategories.size===0) { alert('Seleccioná categorías.'); return; }
-      if(!state.currentWord) pickWord();
+      if(!state.currentWord){
+        const ok = await pickWord();
+        if(!ok) return;
+      }
       startRound();
     });
 
@@ -510,9 +708,26 @@
       if(state.revealed) return;
       const i = state.revealStep;
       const isImp = state.impostorIdxs.includes(i);
-      const text = isImp
-        ? 'Eres el <strong>IMPOSTOR</strong><br/><span class="muted">Tu palabra es: <em>???</em></span>'
-        : `Tu palabra es: <strong>${escapeHtml(state.currentWord)}</strong>`;
+
+      let text;
+
+      if (isImp){
+        text = 'Eres el <strong>IMPOSTOR</strong><br/><span class="muted">Tu palabra es: <em>???</em></span>';
+      } else {
+        if (state.currentWord && typeof state.currentWord === 'object' && state.currentWord.tipo === 'club'){
+          const nombre = state.currentWord.nombre || 'Club desconocido';
+          const img = state.currentWord.imagen
+            ? `<img src="${state.currentWord.imagen}" alt="${escapeHtml(nombre)}" style="width:120px;height:120px;object-fit:contain;display:block;margin:0 auto 8px;">`
+            : '';
+          text = `
+            ${img}
+            <div>Tu club es: <strong>${escapeHtml(nombre)}</strong></div>
+          `;
+        } else {
+          text = `Tu palabra es: <strong>${escapeHtml(state.currentWord)}</strong>`;
+        }
+      }
+
       $('#revealCard').innerHTML = `<div class="notice">${text}</div>`;
       state.revealed = true;
       $('#btnShow').disabled = true;
@@ -523,8 +738,29 @@
     $('#confirmVote').addEventListener('click', confirmVote);
     $('#skipVote').addEventListener('click', () => { showResultsAfterVote(null,false); });
     $('#continueRound').addEventListener('click', () => { beginVoting(); });
-    $('#playAgain').addEventListener('click', () => { pickWord(); startRound(); });
+    $('#playAgain').addEventListener('click', async () => {
+      const ok = await pickWord();
+      if(ok) startRound();
+    });
     $('#toLobby').addEventListener('click', () => { show('#screen-lobby'); updateStartButton(); });
+
+    // Navegación a cartas
+    document.getElementById('btnOpenCards').addEventListener('click', () => {
+      show('#screen-cards');
+      loadCards();
+    });
+
+    document.getElementById('backFromCards').addEventListener('click', () => {
+      show('#screen-menu');
+    });
+
+    // Filtros de rareza
+    document.getElementById('btnFilterAll').addEventListener('click', () => filterCardsByRareza('all'));
+    document.getElementById('btnFilterComunes').addEventListener('click', () => filterCardsByRareza('Común'));
+    document.getElementById('btnFilterEspeciales').addEventListener('click', () => filterCardsByRareza('Especial'));
+    document.getElementById('btnFilterEpicas').addEventListener('click', () => filterCardsByRareza('Épica'));
+    document.getElementById('btnFilterLegendarias').addEventListener('click', () => filterCardsByRareza('Legendaria'));
+    document.getElementById('btnFilterCampeones').addEventListener('click', () => filterCardsByRareza('Campeón'));
 
     // init
     load();
