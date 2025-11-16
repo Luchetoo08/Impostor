@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Impostor – Fiesta con Amigos</title>
+  <title>Impostor</title>
+
   <style>
     :root{
       --bg:#0e0e0e;              /* Fondo negro estilo Netflix */
@@ -393,39 +394,43 @@
     <!-- Banner de categorías activas -->
     <div id="roundBanner" class="hidden">
       <div class="chip">
-        Categorías: <span id="roundCatsText"></span>
+        Categorías seleccionadas: <span id="roundCatsText"></span>
       </div>
     </div>
 
-    <!-- MENÚ PRINCIPAL -->
+    <!-- MENÚ PRINCIPAL (siempre columna) -->
     <section id="screen-menu" class="home-screen">
-      <div class="card"><div class="content">
-        <h2 class="title">Crear partida rápida</h2>
-        <p class="muted">Juego local en un solo dispositivo. Revelan rol, debaten y votan mirando este mismo celu.</p>
-        <div class="spacer"></div>
-        <div class="row">
-          <button class="btn primary" id="createQuick">Crear partida</button>
-          <span class="chip" id="roomCode">Sala — — —</span>
+      <div class="card">
+        <div class="content center">
+          <h2 class="title">Crear partida rápida</h2>
+          <p class="muted">Juego local en un solo dispositivo. Revelen rol, discutan y definan en grupo.</p>
+          <div class="spacer"></div>
+          <div class="row" style="justify-content:center">
+            <button class="btn primary" id="createQuick">Crear partida</button>
+            <span class="chip" id="roomCode">Sala — — —</span>
+          </div>
+          <div class="spacer"></div>
+          <div class="row" style="justify-content:center">
+            <button class="btn ghost" id="btnOpenCards">Cartas Clash Royale</button>
+          </div>
+          <div class="spacer"></div>
+          <div class="notice">Tip: elegí <strong>categorías</strong>. Todos reciben la misma palabra excepto el <strong>Impostor</strong>, que recibe <em>???</em>.</div>
         </div>
-        <div class="spacer"></div>
-        <div class="row">
-          <button class="btn ghost" id="btnOpenCards">Cartas Clash Royale</button>
-        </div>
-        <div class="spacer"></div>
-        <div class="notice">Tip: elegí <strong>categorías</strong>. Todos reciben la misma palabra excepto el <strong>Impostor</strong>, que recibe <em>???</em>.</div>
-      </div></div>
+      </div>
 
-      <div class="card"><div class="content">
-        <h2 class="title">Cómo se juega</h2>
-        <ul class="list">
-          <li><span>1) Agregá jugadores</span><span>👥</span></li>
-          <li><span>2) Elegí categorías</span><span>🗂️</span></li>
-          <li><span>3) Elegí la palabra</span><span>🔀</span></li>
-          <li><span>4) Revelá con <em>Mostrar</em></span><span>📱</span></li>
-          <li><span>5) Discusión y decisión grupal</span><span>🗳️</span></li>
-          <li><span>6) Resultado y condición de victoria</span><span>🏆</span></li>
-        </ul>
-      </div></div>
+      <div class="card">
+        <div class="content">
+          <h2 class="title">Cómo se juega</h2>
+          <ul class="list">
+            <li><span>1) Agregá jugadores</span><span>👥</span></li>
+            <li><span>2) Elegí categorías</span><span>🗂️</span></li>
+            <li><span>3) Elegí la palabra</span><span>🔀</span></li>
+            <li><span>4) Revelá con <em>Mostrar</em></span><span>📱</span></li>
+            <li><span>5) Discusión y decisión grupal</span><span>🗳️</span></li>
+            <li><span>6) Resultado y condición de victoria</span><span>🏆</span></li>
+          </ul>
+        </div>
+      </div>
     </section>
 
     <!-- LOBBY -->
@@ -451,7 +456,7 @@
             <span class="muted">Elegí al menos 1</span>
           </div>
           <div class="spacer"></div>
-          <h3 class="title" style="margin-top:8px;font-size:16px">Impostores</h3>
+          <h3 class="title" style="margin-top:8px">Impostores</h3>
           <div class="row" id="impostorPicker">
             <label class="chip"><input type="radio" name="impostors" value="1" checked style="margin-right:8px"> 1 impostor</label>
             <label class="chip"><input type="radio" name="impostors" value="2" style="margin-right:8px"> 2 impostores</label>
@@ -528,7 +533,7 @@
       </div></div>
     </section>
 
-    <!-- CARTAS CLASH ROYALE -->
+    <!-- CARTAS CLASH ROYALE (solo API) -->
     <section id="screen-cards" class="hidden">
       <div class="card">
         <div class="content">
@@ -556,30 +561,18 @@
   <script>
     // ====== Palabras (categorías) ======
     const wordPools = {
-      "Clubes ARG": [],   // viene desde API clubesarg
-      "Clubes Mundo": [], // viene desde API clubesmundo
+      "Clubes ARG": [],       // API
+      "Clubes Mundo": [],     // API
+      "Jugadores ARG": [],    // API
+      "Jugadores Mundo": [],  // API
+      "Clash Royale": [],     // API (cartas)
       "CESD":[
         "Lucho","Pedro","Spalletti","Luana","Francisco","Lucas","Tiziano","Enzo","Santiago","Uriel","Guada","Uma","Aileen","Sofia Storero","Genaro","Joaquin","Bruno Farias","Ursula","Camila 3ro","Guada 3ro","Mechi","Facu Ortiz","Dario","Fede Torre","Oriana","Mariano","Jorge Flores","Soledad Rolfo","Julieta Zaragoza","Carolina Orellano","Franco Almada","Franco García","Veronica Schulthess","Laura Geric","Laura Ingrassia","Cristian Soloa","Claudia Pedri","Carolina Companys","Mariana Menzaghi","Mariana Rodriguez","Gala","Agostina","Carla","Montse","Azul","Carro","Susan","Gaby Pucheta","Marcos Gómez","Alejandra Moreno","David Toscano","Denis Molina","Gonzalo","Isabella 4to","Juan Pablo Cicaré"
-      ],
-      "Jugadores ARG": [
-        "Messi","Di María","Dibu Martínez","De Paul","Enzo Fernández","Julián Álvarez","Lautaro Martínez","Paredes","Otamendi","Cuti Romero","Garnacho","Mac Allister","Lo Celso","Tagliafico","Molina","Palacios","Montiel","Barco","Thiago Almada","Diablito Echeverri",
-        "Nico González","Buendía","Martínez Quarta","Dybala","Correa","Foyth","Papu Gómez","Mascherano","Pastore","Aimar"
-      ],
-      "Jugadores Mundo (actuales)": [
-        "Kylian Mbappé","Erling Haaland","Kevin De Bruyne","Cristiano Ronaldo","Neymar Jr","Jude Bellingham",
-        "Vinícius Júnior","Rodrygo","Mohamed Salah","Harry Kane","Robert Lewandowski","Karim Benzema",
-        "Luka Modrić","Pedri","Gavi","Rodri","Bernardo Silva","Bruno Fernandes","Bukayo Saka",
-        "Phil Foden","Jamal Musiala","Florian Wirtz","Joshua Kimmich","İlkay Gündoğan","Frenkie de Jong",
-        "Martin Ødegaard","Federico Valverde","Rafael Leão","João Félix","Victor Osimhen","Khvicha Kvaratskhelia",
-        "Heung-min Son","Antoine Griezmann","Ousmane Dembélé","Achraf Hakimi","Rúben Dias","Virgil van Dijk",
-        "Alphonso Davies","Thibaut Courtois","Alisson Becker","Ederson","Marc-André ter Stegen","Bruno Guimarães",
-        "Nicolò Barella","Declan Rice","Gabriel Martinelli","Darwin Núñez","Kai Havertz","Federico Chiesa","Leroy Sané"
       ],
       "Leyendas": [
         "Maradona","Pelé","Zidane","Ronaldinho","Ronaldo Nazário","Cruyff","Beckenbauer","Maldini","Xavi","Iniesta","Henry","Baggio","Figo","Romário","Shevchenko","Rooney","Ibrahimović","Roberto Carlos","Cafu","Totti",
         "Nedvěd","Gattuso","Pirlo","Kaká","Eto'o","Cannavaro","Del Piero","Stoichkov","Van Basten","Platini"
       ],
-      "Clash Royale": [], // ahora viene desde la API como palabras
       "Países": [
         "Estados Unidos","China","India","Brasil","Rusia","Reino Unido","Francia","Alemania","Italia","España",
         "Canadá","México","Japón","Corea del Sur","Australia","Argentina","Chile","Colombia","Perú","Uruguay",
@@ -595,10 +588,9 @@
       players: [],
       selectedCategories: new Set(),
       usedWords: new Set(),
-      currentWord: null, // string o {tipo:"club"/"clash",nombre,imagen}
+      currentWord: null, // string o {tipo, nombre, imagen}
       impostorIdxs: [],
-      impostorCount: 1,   // configuración elegida en el lobby
-      impostorsLeft: 0,   // impostores vivos en la ronda actual
+      impostorCount: 1,
       alive: [],
       revealStep: 0,
       revealed: false,
@@ -613,10 +605,10 @@
     const escapeHtml = str => String(str).replace(/[&<>"']/g, s=>({"&":"&amp;","<":"&lt;","&gt;":">","\"":"&quot;","'":"&#39;"}[s]));
     function getImpostorNames(){ return state.impostorIdxs.map(i=>state.players[i]).filter(Boolean); }
 
-    const save = () => localStorage.setItem('imposthor-lite', JSON.stringify({players:state.players, used:[...state.usedWords]}));
+    const save = () => localStorage.setItem('impostor-lite', JSON.stringify({players:state.players, used:[...state.usedWords]}));
     const load = () => {
       try{
-        const d = JSON.parse(localStorage.getItem('imposthor-lite')||'{}');
+        const d = JSON.parse(localStorage.getItem('impostor-lite')||'{}');
         if(Array.isArray(d.players)) state.players = d.players.slice(0,16);
         if(Array.isArray(d.used)) state.usedWords = new Set(d.used);
       }catch{}
@@ -624,7 +616,9 @@
 
     // ====== Navegación / Render ======
     function show(id){
-      ["#screen-menu","#screen-lobby","#screen-reveal","#screen-discuss","#screen-vote","#screen-results","#screen-cards"].forEach(
+      ["#screen-menu","#screen-lobby","#screen-reveal","#screen-discuss",
+       "#screen-vote","#screen-results","#screen-cards"
+      ].forEach(
         s=>$(s).classList.add('hidden')
       );
       $(id).classList.remove('hidden');
@@ -647,10 +641,14 @@
         el.className='selectable';
         el.dataset.cat = cat;
         let extra;
-        if(cat === "Clubes ARG" || cat === "Clubes Mundo"){
+        if(
+          cat === "Clubes ARG" ||
+          cat === "Clubes Mundo" ||
+          cat === "Jugadores ARG" ||
+          cat === "Jugadores Mundo" ||
+          cat === "Clash Royale"
+        ){
           extra = 'API';
-        } else if(cat === "Clash Royale"){
-          extra = 'API (nombres de cartas)';
         } else {
           extra = (wordPools[cat].length+" palabras");
         }
@@ -680,146 +678,167 @@
       banner.classList.remove('hidden');
     }
 
-    // ====== Clubes (MockAPI) ======
+    // ====== APIs ======
     const API_CLUBES_ARG   = "https://6918a60a21a963594870c317.mockapi.io/clubesarg";
     const API_CLUBES_MUNDO = "https://6918a60a21a963594870c317.mockapi.io/clubesmundo";
+    const API_JUG_ARG      = "https://691930719ccba073ee9257b2.mockapi.io/jugadoresarg";
+    const API_JUG_MUNDO    = "https://691930719ccba073ee9257b2.mockapi.io/jugadoresmundo";
 
-    async function pickFromClubApi(endpoint){
-      try{
-        const res = await fetch(endpoint);
-        const data = await res.json();
+    const API_COMUNES = "https://6917a7c721a96359486d94bb.mockapi.io/comunes";
+    const API_ALTAS  = "https://6917a7c721a96359486d94bb.mockapi.io/cartas2";
 
-        if (!Array.isArray(data) || data.length === 0){
-          alert('No hay clubes en la API seleccionada.');
-          return false;
-        }
+    let cacheClubesArg = null;
+    let cacheClubesMundo = null;
+    let cacheJugArg = null;
+    let cacheJugMundo = null;
+    let allCards = [];
 
-        const disponibles = data.filter(c => !state.usedWords.has(c.nombre || c.name));
-        const pool = disponibles.length ? disponibles : data;
-
-        if(!pool.length){
-          alert('No hay clubes disponibles en esta API.');
-          return false;
-        }
-
-        const elegido = choice(pool);
-        const nombre = elegido.nombre || elegido.name || 'Club desconocido';
-
-        state.currentWord = {
-          tipo: 'club',
-          nombre,
-          imagen: elegido.imagen || elegido.image || ''
-        };
-
-        state.usedWords.add(nombre);
-        save();
-        return true;
-      }catch(e){
-        console.error(e);
-        alert('Error al obtener clubes desde la API.');
-        return false;
+    async function ensureClubesArg(){
+      if(!cacheClubesArg){
+        const r = await fetch(API_CLUBES_ARG);
+        cacheClubesArg = await r.json();
       }
+      return cacheClubesArg;
+    }
+    async function ensureClubesMundo(){
+      if(!cacheClubesMundo){
+        const r = await fetch(API_CLUBES_MUNDO);
+        cacheClubesMundo = await r.json();
+      }
+      return cacheClubesMundo;
+    }
+    async function ensureJugArg(){
+      if(!cacheJugArg){
+        const r = await fetch(API_JUG_ARG);
+        cacheJugArg = await r.json();
+      }
+      return cacheJugArg;
+    }
+    async function ensureJugMundo(){
+      if(!cacheJugMundo){
+        const r = await fetch(API_JUG_MUNDO);
+        cacheJugMundo = await r.json();
+      }
+      return cacheJugMundo;
     }
 
-    // ====== Clash Royale (MockAPI como palabras) ======
-    const API_CR_COMUNES = "https://6917a7c721a96359486d94bb.mockapi.io/comunes";
-    const API_CR_ALTAS  = "https://6917a7c721a96359486d94bb.mockapi.io/cartas2";
-
-    async function pickClashWordFromApi(){
-      try{
-        const [r1,r2] = await Promise.all([
-          fetch(API_CR_COMUNES),
-          fetch(API_CR_ALTAS)
-        ]);
-        const d1 = await r1.json();
-        const d2 = await r2.json();
-
-        const data = [
-          ...(Array.isArray(d1)?d1:[]),
-          ...(Array.isArray(d2)?d2:[])
-        ];
-
-        if(!data.length){
-          alert('No hay cartas de Clash Royale en la API.');
-          return false;
-        }
-
-        const disponibles = data.filter(c => {
-          const nombre = c.name || c.nombre;
-          return nombre && !state.usedWords.has(nombre);
-        });
-        const pool = disponibles.length ? disponibles : data;
-
-        const elegido = choice(pool);
-        const nombre = elegido.name || elegido.nombre || 'Carta desconocida';
-
-        state.currentWord = {
-          tipo: 'clash',
-          nombre,
-          imagen: elegido.imagen || ''
-        };
-
-        state.usedWords.add(nombre);
-        save();
-        return true;
-      }catch(e){
-        console.error(e);
-        alert('Error al obtener cartas de Clash Royale desde la API.');
-        return false;
-      }
+    async function ensureCardsLoaded(){
+      if(allCards.length) return allCards;
+      const r1 = await fetch(API_COMUNES);
+      const r2 = await fetch(API_ALTAS);
+      const d1 = await r1.json();
+      const d2 = await r2.json();
+      allCards = [...d1, ...d2];
+      return allCards;
     }
 
-    // ====== Juego ======
+    // ====== Helpers: pick desde APIs ======
+    async function pickFromApi(type){
+      let data;
+      if(type === 'club-arg'){
+        data = await ensureClubesArg();
+      } else if(type === 'club-mundo'){
+        data = await ensureClubesMundo();
+      } else if(type === 'jug-arg'){
+        data = await ensureJugArg();
+      } else if(type === 'jug-mundo'){
+        data = await ensureJugMundo();
+      } else {
+        return false;
+      }
+
+      if(!Array.isArray(data) || data.length===0){
+        alert('No hay datos en la API seleccionada.');
+        return false;
+      }
+
+      const disponibles = data.filter(item => !state.usedWords.has(item.nombre));
+      const pool = disponibles.length ? disponibles : data;
+      const elegido = choice(pool);
+      const nombre = elegido.nombre || elegido.name || 'Sin nombre';
+      const imagen = elegido.imagen || elegido.image || '';
+
+      state.currentWord = { tipo:type, nombre, imagen };
+      state.usedWords.add(nombre);
+      save();
+      return true;
+    }
+
+    async function pickFromClashApi(){
+      const data = await ensureCardsLoaded();
+      if(!Array.isArray(data) || data.length === 0){
+        alert('No hay cartas en la API de Clash Royale.');
+        return false;
+      }
+
+      const disponibles = data.filter(c => !state.usedWords.has(c.name));
+      const pool = disponibles.length ? disponibles : data;
+      const elegido = choice(pool);
+      const nombre = elegido.name || 'Carta';
+      const imagen = elegido.imagen || elegido.image || '';
+
+      state.currentWord = {
+        tipo:'cr-card',
+        nombre,
+        imagen
+      };
+      state.usedWords.add(nombre);
+      save();
+      return true;
+    }
+
+    // ====== Juego: elegir palabra mezclando categorías ======
     async function pickWord(){
-      if(state.selectedCategories.size === 0){
+      if(state.selectedCategories.size===0){
         alert('Elegí al menos una categoría.');
         return false;
       }
 
       const cats = Array.from(state.selectedCategories);
+      const cat = choice(cats); // categoría elegida para esta ronda
 
-      async function tryCategory(cat){
-        if(cat === "Clubes ARG"){
-          return await pickFromClubApi(API_CLUBES_ARG);
-        }
-        if(cat === "Clubes Mundo"){
-          return await pickFromClubApi(API_CLUBES_MUNDO);
-        }
-        if(cat === "Clash Royale"){
-          return await pickClashWordFromApi();
-        }
-
-        const pool = wordPools[cat] || [];
-        if(pool.length === 0) return false;
-
-        const fresh = pool.filter(w => !state.usedWords.has(w));
-        const usable = fresh.length>0 ? fresh : pool;
-        if(usable.length===0) return false;
-
-        state.currentWord = choice(usable);
-        state.usedWords.add(state.currentWord);
-        save();
-        return true;
+      // Categorías API
+      if(cat === "Clubes ARG"){
+        return await pickFromApi('club-arg');
+      }
+      if(cat === "Clubes Mundo"){
+        return await pickFromApi('club-mundo');
+      }
+      if(cat === "Jugadores ARG"){
+        return await pickFromApi('jug-arg');
+      }
+      if(cat === "Jugadores Mundo"){
+        return await pickFromApi('jug-mundo');
+      }
+      if(cat === "Clash Royale"){
+        return await pickFromClashApi();
       }
 
-      for(let attempt=0; attempt<cats.length*2; attempt++){
-        const cat = choice(cats);
-        const ok = await tryCategory(cat);
-        if(ok) return true;
+      // Categorías con arrays (CESD, Leyendas, Países)
+      let pool = wordPools[cat] || [];
+      if(!pool.length){
+        alert('No hay palabras en la categoría seleccionada.');
+        return false;
       }
 
-      alert('No hay palabras en las categorías seleccionadas.');
-      return false;
+      const fresh = pool.filter(w => !state.usedWords.has(w));
+      const usable = fresh.length ? fresh : pool;
+      const word = choice(usable);
+
+      state.currentWord = word;
+      state.usedWords.add(word);
+      save();
+      return true;
     }
 
     function startRound(){
-      const maxImpostors = Math.max(1, state.players.length - 1);
-      const desired = Math.max(1, Math.min(state.impostorCount, maxImpostors));
-
+      const desired = Math.max(1, Math.min(state.impostorCount, Math.max(1, state.players.length-1)));
       const chosen = new Set();
-      while(chosen.size < desired){ chosen.add(randInt(state.players.length)); }
+      while(chosen.size < desired){
+        chosen.add(randInt(state.players.length));
+      }
       state.impostorIdxs = Array.from(chosen);
-      state.impostorsLeft = state.impostorIdxs.length;
+      state.impostorCount = state.impostorIdxs.length;
 
       state.alive = Array(state.players.length).fill(true);
       state.revealStep = 0;
@@ -827,6 +846,7 @@
       updateRoundBanner();
       show('#screen-reveal');
       renderReveal();
+      $('#impostorsLeft').textContent = state.impostorCount;
     }
 
     function renderReveal(){
@@ -839,7 +859,10 @@
     }
 
     function nextReveal(){
-      if(!state.revealed){ alert('Primero toca "Mostrar" para ver tu rol.'); return; }
+      if(!state.revealed){
+        alert('Primero toca "Mostrar" para ver tu rol.');
+        return;
+      }
       if(state.revealStep < state.players.length-1){
         state.revealStep++;
         renderReveal();
@@ -857,12 +880,13 @@
     function renderVote(){
       const playersLeft = state.alive.filter(Boolean).length;
       $('#playersLeft').textContent = playersLeft;
-      $('#impostorsLeft').textContent = state.impostorsLeft;
+      $('#impostorsLeft').textContent = state.impostorCount;
       const list = $('#voteList'); list.innerHTML='';
       state.players.forEach((name,i)=>{
         if(!state.alive[i]) return;
         const b = document.createElement('button');
         b.className = 'btn selectable' + (state.selectedAccused===i ? ' selected' : '');
+        b.style.textAlign='left';
         b.innerHTML = `👤 ${escapeHtml(name)}`;
         b.onclick = ()=>{ state.selectedAccused = i; renderVote(); };
         list.appendChild(b);
@@ -870,12 +894,15 @@
     }
 
     function confirmVote(){
-      if(state.selectedAccused==null){ alert('Elegí a quién acusan.'); return; }
+      if(state.selectedAccused==null){
+        alert('Elegí a quién acusan.');
+        return;
+      }
       const accused = state.selectedAccused;
       state.alive[accused] = false;
       const wasImpostor = state.impostorIdxs.includes(accused);
       if(wasImpostor){
-        state.impostorsLeft--;
+        state.impostorCount--;
         state.impostorIdxs = state.impostorIdxs.filter(x=>x!==accused);
       }
       showResultsAfterVote(accused, wasImpostor);
@@ -883,13 +910,13 @@
 
     function showResultsAfterVote(accused, wasImpostor){
       const playersLeft = state.alive.filter(Boolean).length;
-      const crewLeft = playersLeft - state.impostorsLeft;
+      const crewLeft = playersLeft - state.impostorCount;
       const accusedText = accused==null? 'Nadie' : state.players[accused];
 
       let outcome = null;
-      if(state.impostorsLeft === 0){
+      if(state.impostorCount === 0){
         outcome = 'crew';
-      } else if(state.impostorsLeft === crewLeft){
+      } else if(state.impostorCount === crewLeft){
         outcome = 'impostors';
       }
 
@@ -897,46 +924,31 @@
         ? '⏸️ Decidieron no eliminar a nadie'
         : (wasImpostor ? '✅ Era el IMPOSTOR' : '❌ No era el impostor');
 
-      let palabraMostrada = '';
-      let imagenMostrada = '';
-      let tipoMostrado = '';
-
-      if(state.currentWord){
-        if(typeof state.currentWord === 'object'){
-          palabraMostrada = state.currentWord.nombre || '';
-          imagenMostrada = state.currentWord.imagen || '';
-          tipoMostrado = state.currentWord.tipo || '';
-        } else {
-          palabraMostrada = String(state.currentWord);
-        }
-      }
-
       let wordBlock = '';
-      if(outcome !== null && palabraMostrada){
-        const imgHtml = imagenMostrada
-          ? `<img src="${imagenMostrada}" alt="${escapeHtml(palabraMostrada)}" style="width:120px;height:120px;object-fit:contain;display:block;margin:0 auto 8px;">`
-          : '';
-        const label =
-          tipoMostrado === 'club'  ? 'Club de la ronda:' :
-          tipoMostrado === 'clash' ? 'Carta de la ronda:' :
-          'Palabra de la ronda:';
-
-        wordBlock = `
-          <p class="muted">${label}</p>
-          <div class="big">
-            ${imgHtml}
-            <div>${escapeHtml(palabraMostrada)}</div>
-          </div>
-          <div class="spacer"></div>
-        `;
-      } else if(outcome === null){
+      if(outcome !== null){
+        let palabraMostrada = '';
+        if(state.currentWord){
+          if(typeof state.currentWord === 'object'){
+            palabraMostrada = state.currentWord.nombre || '';
+          } else {
+            palabraMostrada = String(state.currentWord);
+          }
+        }
+        if(palabraMostrada){
+          wordBlock = `
+            <p class="muted">Palabra de la ronda:</p>
+            <div class="big">${escapeHtml(palabraMostrada)}</div>
+            <div class="spacer"></div>
+          `;
+        }
+      } else {
         wordBlock = `
           <p class="muted">La palabra permanecerá oculta hasta que termine la partida.</p>
           <div class="spacer"></div>
         `;
       }
 
-      let statusLine = `👥 Vivos: <strong>${playersLeft}</strong> | 🎭 Impostores restantes: <strong>${state.impostorsLeft}</strong>`;
+      let statusLine = `👥 Vivos: <strong>${playersLeft}</strong> | 🎭 Impostores restantes: <strong>${state.impostorCount}</strong>`;
       if(outcome==='crew') statusLine += ' — 🏆 Ganan los tripulantes';
       if(outcome==='impostors') statusLine += ' — 🏴 Ganan los impostores';
 
@@ -966,12 +978,7 @@
       show('#screen-results');
     }
 
-    // ====== Cartas Clash Royale (MockAPI visual) ======
-    const API_COMUNES = "https://6917a7c721a96359486d94bb.mockapi.io/comunes";
-    const API_ALTAS  = "https://6917a7c721a96359486d94bb.mockapi.io/cartas2";
-
-    let allCards = [];
-
+    // ====== Cartas Clash Royale (MockAPI) ======
     function getRarezaColor(r){
       if (r === "Común") return "#b9b9b9";
       if (r === "Especial") return "#4bc9ff";
@@ -1002,17 +1009,10 @@
     }
 
     async function loadCards(){
-      if(allCards.length) {
-        renderCards(allCards);
-        return;
-      }
       const grid = document.getElementById("cardsGrid");
       grid.innerHTML = `<p class="muted">Cargando cartas...</p>`;
       try{
-        const [r1,r2] = await Promise.all([fetch(API_COMUNES), fetch(API_ALTAS)]);
-        const d1 = await r1.json();
-        const d2 = await r2.json();
-        allCards = [...d1, ...d2];
+        await ensureCardsLoaded();
         renderCards(allCards);
       }catch(e){
         console.error(e);
@@ -1036,12 +1036,7 @@
       show('#screen-lobby');
       renderPlayers();
       renderCategories();
-      document.querySelectorAll('input[name="impostors"]').forEach(r=>{
-        r.addEventListener('change',()=>{
-          const val = parseInt(r.value,10);
-          state.impostorCount = isNaN(val)?1:val;
-        });
-      });
+      updateRoundBanner();
       updateStartButton();
     });
 
@@ -1049,7 +1044,7 @@
     $('#btnBackMenu').addEventListener('click', () => show('#screen-menu'));
     $('#btnReset').addEventListener('click', () => {
       if(confirm('¿Seguro que querés reiniciar la aplicación?')){
-        localStorage.removeItem('imposthor-lite');
+        localStorage.removeItem('impostor-lite');
         location.reload();
       }
     });
@@ -1083,9 +1078,11 @@
       const item = e.target.closest('.selectable');
       if(!item) return;
       const cat = item.getAttribute('data-cat');
-      if(state.selectedCategories.has(cat)) state.selectedCategories.delete(cat); else state.selectedCategories.add(cat);
+      if(state.selectedCategories.has(cat)) state.selectedCategories.delete(cat);
+      else state.selectedCategories.add(cat);
       item.classList.toggle('selected');
       updateStartButton();
+      updateRoundBanner();
     });
 
     $('#toggleAllCats').addEventListener('click', () => {
@@ -1094,6 +1091,14 @@
       state.selectedCategories = new Set(allSelected?[]:all);
       renderCategories();
       updateStartButton();
+      updateRoundBanner();
+    });
+
+    document.querySelectorAll('input[name="impostors"]').forEach(r=>{
+      r.addEventListener('change',()=>{
+        const val = parseInt(r.value,10);
+        state.impostorCount = isNaN(val)?1:val;
+      });
     });
 
     $('#btnShuffle').addEventListener('click', async () => {
@@ -1125,23 +1130,20 @@
       if (isImp){
         text = 'Eres el <strong>IMPOSTOR</strong><br/><span class="muted">Tu palabra es: <em>???</em></span>';
       } else {
-        if (state.currentWord && typeof state.currentWord === 'object' && state.currentWord.tipo === 'club'){
-          const nombre = state.currentWord.nombre || 'Club desconocido';
-          const img = state.currentWord.imagen
-            ? `<img src="${state.currentWord.imagen}" alt="${escapeHtml(nombre)}" style="width:120px;height:120px;object-fit:contain;display:block;margin:0 auto 8px;">`
+        if (state.currentWord && typeof state.currentWord === 'object'){
+          const {tipo,nombre,imagen} = state.currentWord;
+          let label = 'Tu palabra es';
+          if(tipo === 'club-arg' || tipo === 'club-mundo') label = 'Tu club es';
+          else if(tipo === 'jug-arg' || tipo === 'jug-mundo') label = 'Tu jugador es';
+          else if(tipo === 'cr-card') label = 'Tu carta es';
+
+          const img = imagen
+            ? `<img src="${imagen}" alt="${escapeHtml(nombre)}" style="width:120px;height:120px;object-fit:contain;display:block;margin:0 auto 8px;">`
             : '';
+
           text = `
             ${img}
-            <div>Tu club es: <strong>${escapeHtml(nombre)}</strong></div>
-          `;
-        } else if (state.currentWord && typeof state.currentWord === 'object' && state.currentWord.tipo === 'clash'){
-          const nombre = state.currentWord.nombre || 'Carta desconocida';
-          const img = state.currentWord.imagen
-            ? `<img src="${state.currentWord.imagen}" alt="${escapeHtml(nombre)}" style="width:120px;height:120px;object-fit:contain;display:block;margin:0 auto 8px;">`
-            : '';
-          text = `
-            ${img}
-            <div>Tu carta es: <strong>${escapeHtml(nombre)}</strong></div>
+            <div>${label}: <strong>${escapeHtml(nombre)}</strong></div>
           `;
         } else {
           text = `Tu palabra es: <strong>${escapeHtml(state.currentWord)}</strong>`;
