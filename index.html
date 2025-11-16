@@ -3,87 +3,405 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Imposthor – Fiesta con Amigos</title>
+  <title>Impostor – Fiesta con Amigos</title>
   <style>
     :root{
-      --bg:#0b1223; --panel:#0f172a; --panel-2:#0b1328; --text:#e5e7eb; --muted:#94a3b8; --line:#1f2937; --accent:#ff2e2e;
-      --ok:#22c55e; --warn:#facc15; --shadow:0 10px 30px rgba(0,0,0,.35);
+      --bg:#0e0e0e;              /* Fondo negro estilo Netflix */
+      --panel:rgba(18,18,18,.85);
+      --panel-2:rgba(10,10,10,.98);
+      --text:#e5e7eb;            /* Gris claro */
+      --muted:#9ca3af;
+      --line:#27272a;
+      --accent:#b80000;          /* Rojo C */
+      --ok:#22c55e;
+      --warn:#facc15;
+      --shadow:0 22px 55px rgba(0,0,0,.9);
     }
+
     *{box-sizing:border-box}
     html,body{height:100%}
-    body{margin:0;font-family:Inter,system-ui,Arial,sans-serif;background:radial-gradient(1200px 800px at 80% -10%, #111a33 0%, var(--bg) 40%);color:var(--text)}
-    .container{max-width:1100px;margin:0 auto;padding:24px;padding-left:clamp(12px,3vw,24px);padding-right:clamp(12px,3vw,24px)}
-    header{display:flex;align-items:center;justify-content:space-between;gap:12px}
-    header h1{margin:0;font-size:clamp(20px,3.5vw,32px);letter-spacing:.5px;color:var(--accent)}
-    .brand{display:flex;align-items:center;gap:10px}
-    .logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#b22222);box-shadow:var(--shadow);display:grid;place-items:center;font-weight:800}
-    .card{background:linear-gradient(180deg,var(--panel),var(--panel-2));border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);backdrop-filter:blur(6px)}
-    .card .content{padding:20px}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,Arial,sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
+
+    .container{
+      max-width:1100px;
+      margin:0 auto;
+      padding:24px;
+      padding-left:clamp(12px,3vw,24px);
+      padding-right:clamp(12px,3vw,24px);
+    }
+
+    /* HEADER centrado */
+    header{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+      text-align:center;
+      margin-bottom:20px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+    }
+    .logo{
+      width:40px;
+      height:40px;
+      border-radius:12px;
+      background:radial-gradient(circle at 30% 20%, #ffcccc 0, #b80000 40%, #2b0000 100%);
+      box-shadow:0 12px 30px rgba(0,0,0,.95);
+      display:grid;
+      place-items:center;
+      font-weight:800;
+      font-size:22px;
+    }
+    header h1{
+      margin:0;
+      font-size:clamp(20px,3.5vw,32px);
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:var(--accent);
+    }
+    .header-actions{
+      justify-content:center;
+    }
+
+    /* Cards / layout general */
+    .card{
+      background:linear-gradient(150deg, var(--panel), var(--panel-2));
+      border:1px solid rgba(148,163,184,0.22);
+      border-radius:22px;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(16px);
+      position:relative;
+      overflow:hidden;
+    }
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:-40%;
+      background:linear-gradient(120deg, rgba(255,255,255,0.08), transparent 60%);
+      mix-blend-mode:soft-light;
+      opacity:.7;
+      pointer-events:none;
+    }
+    .card .content{
+      position:relative;
+      padding:20px;
+      z-index:1;
+    }
+
     .grid{display:grid;gap:16px}
     .grid.cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
     .grid.cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}
     .grid.auto{grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
-    @media (max-width:900px){.grid.cols-2{grid-template-columns:1fr}.grid.cols-3{grid-template-columns:repeat(2,minmax(0,1fr))}}
-    @media (max-width:640px){.grid.cols-3{grid-template-columns:1fr}}
-    .btn{border:none;border-radius:14px;padding:12px 16px;min-height:44px;cursor:pointer;font-weight:800;box-shadow:var(--shadow);background:linear-gradient(135deg,#ffffff,#d1d5db);color:#0b0f1a;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
-    .btn.primary{background:linear-gradient(135deg,var(--accent),#ff6b6b);color:#fff}
-    .btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
-    .btn.success{background:linear-gradient(135deg,var(--ok),#86efac)}
-    .btn.warning{background:linear-gradient(135deg,var(--warn),#fde047)}
+    @media (max-width:900px){
+      .grid.cols-2{grid-template-columns:1fr}
+      .grid.cols-3{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media (max-width:640px){
+      .grid.cols-3{grid-template-columns:1fr}
+    }
+
+    /* Home: siempre en columna */
+    .home-screen{
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+    }
+
+    .btn{
+      border:none;
+      border-radius:16px;
+      padding:12px 16px;
+      min-height:44px;
+      cursor:pointer;
+      font-weight:800;
+      font-size:14px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      box-shadow:0 16px 32px rgba(0,0,0,.9);
+      background:linear-gradient(135deg,#ffffff,#d1d5db);
+      color:#0b0f1a;
+      touch-action:manipulation;
+      -webkit-tap-highlight-color:transparent;
+      transition:
+        transform .15s ease-out,
+        box-shadow .15s ease-out,
+        background .15s ease-out,
+        border-color .15s ease-out,
+        color .15s ease-out;
+    }
+    .btn.primary{
+      background:linear-gradient(135deg,#b80000,#e01313);
+      color:#fff;
+      border:1px solid rgba(184,0,0,.7);
+      box-shadow:
+        0 0 14px rgba(184,0,0,.7),
+        0 20px 40px rgba(0,0,0,1);
+    }
+    .btn.ghost{
+      background:radial-gradient(circle at 0 0, rgba(184,0,0,.16), rgba(18,18,18,.95));
+      color:var(--text);
+      border:1px solid rgba(75,85,99,.9);
+    }
+    .btn.success{
+      background:linear-gradient(135deg,var(--ok),#4ade80);
+      color:#022c22;
+      border:1px solid rgba(34,197,94,.85);
+    }
+    .btn.warning{
+      background:linear-gradient(135deg,var(--warn),#fbbf24);
+      color:#111827;
+      border:1px solid rgba(250,204,21,.9);
+    }
+    .btn:hover{
+      transform:translateY(-1px);
+      box-shadow:0 24px 50px rgba(0,0,0,1);
+    }
+    .btn:active{
+      transform:scale(.97);
+      box-shadow:0 14px 28px rgba(0,0,0,1);
+    }
+    .btn:disabled{
+      opacity:.45;
+      cursor:not-allowed;
+      box-shadow:none;
+      transform:none;
+      background:linear-gradient(135deg,#4b4b4b,#3a3a3a);
+      border:1px solid #444;
+      color:#e5e7eb;
+    }
+
     .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
     .center{text-align:center}
     .spacer{height:14px}
-    .muted{color:var(--muted)}
-    .title{font-size:clamp(18px,2.6vw,26px);margin:0 0 8px}
-    input[type="text"]{width:100%;padding:12px 14px;border-radius:12px;background:#0c162c;border:1px solid #1f2b46;color:var(--text);font-size:clamp(14px,3.6vw,16px)}
-    .players{display:flex;flex-wrap:wrap;gap:10px}
-    .pill{background:#0d1a33;border:1px solid #1f2b46;color:var(--text);border-radius:999px;padding:8px 12px;display:flex;align-items:center;gap:8px}
-    .pill .x{cursor:pointer;opacity:.85}
-    .chip{padding:10px 12px;border-radius:999px;border:1px solid var(--line);background:linear-gradient(135deg,#0f213f,#0b1731);font-size:14px}
-    .selectable{border:1px solid var(--line);background:#101b34;padding:12px;border-radius:12px;cursor:pointer;color:#ffffff;transition:border .15s ease,transform .08s ease,box-shadow .15s ease}
-    .selectable:hover{transform:translateY(-1px)}
-    .selectable.selected{border:2px solid var(--accent);box-shadow:0 0 0 3px rgba(255,46,46,.15) inset,0 6px 18px rgba(255,46,46,.18)}
-    .notice{padding:12px 14px;border-radius:12px;background:#0c182e;border:1px dashed #23314f}
-    .big{font-size:clamp(22px,6vw,38px);font-weight:900;letter-spacing:.5px;margin:6px 0;word-break:break-word}
+    .muted{color:var(--muted);font-size:14px}
+    .title{
+      font-size:clamp(18px,2.6vw,26px);
+      margin:0 0 8px;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      color:var(--accent);
+    }
+    input[type="text"]{
+      width:100%;
+      padding:11px 13px;
+      border-radius:14px;
+      background:#121212;
+      border:1px solid #333;
+      color:var(--text);
+      font-size:14px;
+      outline:none;
+      transition:border-color .15s, box-shadow .15s, background .15s;
+    }
+    input[type="text"]:focus{
+      border-color:var(--accent);
+      box-shadow:0 0 0 1px rgba(184,0,0,.8),0 0 12px rgba(184,0,0,.6);
+      background:#151515;
+    }
+
+    .players{display:flex;flex-wrap:wrap;gap:8px}
+    .pill{
+      background:rgba(18,18,18,.9);
+      border:1px solid #3f3f46;
+      color:var(--text);
+      border-radius:999px;
+      padding:6px 10px;
+      display:flex;
+      align-items:center;
+      gap:6px;
+      font-size:13px;
+    }
+    .pill .x{cursor:pointer;opacity:.85;font-size:11px}
+
+    .chip{
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.38);
+      background:rgba(15,15,15,.9);
+      font-size:12px;
+      color:var(--muted);
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+    }
+
+    .selectable{
+      border:1px solid var(--line);
+      background:#141414;
+      padding:12px;
+      border-radius:16px;
+      cursor:pointer;
+      color:#ffffff;
+      transition:border .15s ease,transform .08s ease,box-shadow .15s ease,background .15s ease;
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+      font-size:13px;
+    }
+    .selectable strong{
+      font-size:13px;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+    }
+    .selectable .muted{font-size:11px}
+    .selectable:hover{
+      transform:translateY(-2px);
+      border-color:var(--accent);
+      box-shadow:0 14px 28px rgba(0,0,0,.9);
+    }
+    .selectable.selected{
+      border:1px solid var(--accent);
+      box-shadow:
+        0 0 0 1px rgba(184,0,0,.7),
+        0 0 20px rgba(184,0,0,.7);
+      background:radial-gradient(circle at 0 0, rgba(184,0,0,.22), #141414);
+    }
+
+    .notice{
+      padding:12px 14px;
+      border-radius:12px;
+      background:#0c182e;
+      border:1px dashed #23314f;
+    }
+    .big{
+      font-size:clamp(22px,6vw,38px);
+      font-weight:900;
+      letter-spacing:.5px;
+      margin:6px 0;
+      word-break:break-word;
+    }
     .list{list-style:none;margin:0;padding:0}
-    .list li{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid #172033}
-    .footer-nav{display:flex;justify-content:space-between;gap:10px;margin-top:16px;position:sticky;bottom:0;background:linear-gradient(180deg,transparent,rgba(11,18,35,.8));backdrop-filter:blur(6px);padding:8px 0}
+    .list li{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:10px 0;
+      border-bottom:1px dashed #172033;
+      font-size:14px;
+    }
+    .footer-nav{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      margin-top:16px;
+      position:sticky;
+      bottom:0;
+      background:linear-gradient(180deg,transparent,rgba(0,0,0,.95));
+      backdrop-filter:blur(12px);
+      padding:8px 0 6px;
+      border-radius:18px 18px 0 0;
+    }
     .hidden{display:none !important}
-    .vote-instructions{color:#fbbf24;font-weight:800;letter-spacing:.3px}
+    .vote-instructions{
+      color:#fbbf24;
+      font-weight:800;
+      letter-spacing:.3px;
+      font-size:14px;
+    }
     .vote-instructions::before{content:"⚠️ ";}
+
+    /* Banner de categorías activas */
+    #roundBanner{
+      margin:12px 0;
+    }
+    #roundBanner .chip{
+      box-shadow:0 0 18px rgba(184,0,0,.4);
+      border-color:rgba(184,0,0,.8);
+    }
 
     /* Cartas Clash Royale */
     .cards-toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
-    .cards-toolbar .btn{min-height:36px;padding:8px 12px;font-size:13px}
-    #cardsGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:14px}
-    .cr-card{background:linear-gradient(180deg,#020617,#020818);border-radius:16px;border:1px solid var(--line);padding:12px;text-align:center;box-shadow:var(--shadow)}
-    .cr-card-img{width:90px;height:90px;object-fit:contain;margin-bottom:6px}
-    .cr-card-name{margin:4px 0 2px;font-size:14px;font-weight:800;color:#e5e7eb}
-    .cr-card-rareza{font-size:12px;color:var(--muted)}
+    .cards-toolbar .btn{
+      min-height:36px;
+      padding:8px 12px;
+      font-size:13px;
+      box-shadow:none;
+    }
+    #cardsGrid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+      gap:14px;
+    }
+    .cr-card{
+      background:linear-gradient(180deg,#020617,#020818);
+      border-radius:16px;
+      border:1px solid var(--line);
+      padding:12px;
+      text-align:center;
+      box-shadow:var(--shadow);
+    }
+    .cr-card-img{
+      width:90px;
+      height:90px;
+      object-fit:contain;
+      margin-bottom:6px;
+    }
+    .cr-card-name{
+      margin:4px 0 2px;
+      font-size:14px;
+      font-weight:800;
+      color:#e5e7eb;
+    }
+    .cr-card-rareza{
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    /* Votación: seleccionado más claro */
+    #voteList .btn.selectable{
+      text-align:left;
+      justify-content:flex-start;
+      background:#101b34;
+      border-radius:16px;
+      border:1px solid #1f2937;
+      box-shadow:none;
+    }
+    #voteList .btn.selectable.selected{
+      border-color:var(--accent);
+      box-shadow:
+        0 0 0 1px rgba(184,0,0,.8),
+        0 0 20px rgba(184,0,0,.5);
+      background:radial-gradient(circle at 0 0, rgba(184,0,0,.2), #101b34);
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <header>
-      <div class="brand"><div class="logo">🕵️</div><h1>Imposthor – Fiesta con Amigos</h1></div>
-      <div class="row">
+      <div class="brand">
+        <div class="logo">🕵️</div>
+        <h1>Impostor</h1>
+      </div>
+      <div class="row header-actions">
         <button class="btn ghost" id="btnBackMenu">Menú</button>
         <button class="btn ghost" id="btnReset">Reiniciar</button>
       </div>
     </header>
 
     <!-- Banner de categorías activas -->
-    <div id="roundBanner" class="hidden" style="margin:12px 0;">
+    <div id="roundBanner" class="hidden">
       <div class="chip">
         Categorías: <span id="roundCatsText"></span>
       </div>
     </div>
 
     <!-- MENÚ PRINCIPAL -->
-    <section id="screen-menu" class="grid cols-2">
+    <section id="screen-menu" class="home-screen">
       <div class="card"><div class="content">
         <h2 class="title">Crear partida rápida</h2>
-        <p class="muted">Juego local en un solo dispositivo. Revelen rol, discutan y definan en grupo.</p>
+        <p class="muted">Juego local en un solo dispositivo. Revelan rol, debaten y votan mirando este mismo celu.</p>
         <div class="spacer"></div>
         <div class="row">
           <button class="btn primary" id="createQuick">Crear partida</button>
@@ -96,6 +414,7 @@
         <div class="spacer"></div>
         <div class="notice">Tip: elegí <strong>categorías</strong>. Todos reciben la misma palabra excepto el <strong>Impostor</strong>, que recibe <em>???</em>.</div>
       </div></div>
+
       <div class="card"><div class="content">
         <h2 class="title">Cómo se juega</h2>
         <ul class="list">
@@ -132,7 +451,7 @@
             <span class="muted">Elegí al menos 1</span>
           </div>
           <div class="spacer"></div>
-          <h3 class="title" style="margin-top:8px">Impostores</h3>
+          <h3 class="title" style="margin-top:8px;font-size:16px">Impostores</h3>
           <div class="row" id="impostorPicker">
             <label class="chip"><input type="radio" name="impostors" value="1" checked style="margin-right:8px"> 1 impostor</label>
             <label class="chip"><input type="radio" name="impostors" value="2" style="margin-right:8px"> 2 impostores</label>
@@ -237,11 +556,10 @@
   <script>
     // ====== Palabras (categorías) ======
     const wordPools = {
-      "Clubes ARG": [], // ahora viene desde la API clubesarg
-      "Clubes Mundo": [
-        "Real Madrid","Barcelona","Atlético de Madrid","Sevilla","Valencia","Manchester United","Manchester City","Liverpool","Arsenal","Chelsea",
-        "Tottenham","Bayern Munich","Borussia Dortmund","PSG","AC Milan","Inter","Juventus","Napoli","Benfica","Porto",
-        "Sporting CP","Ajax","Feyenoord","PSV","Roma","Lazio","Marseille","Lyon","Leverkusen","RB Leipzig"
+      "Clubes ARG": [],   // viene desde API clubesarg
+      "Clubes Mundo": [], // viene desde API clubesmundo
+      "CESD":[
+        "Lucho","Pedro","Spalletti","Luana","Francisco","Lucas","Tiziano","Enzo","Santiago","Uriel","Guada","Uma","Aileen","Sofia Storero","Genaro","Joaquin","Bruno Farias","Ursula","Camila 3ro","Guada 3ro","Mechi","Facu Ortiz","Dario","Fede Torre","Oriana","Mariano","Jorge Flores","Soledad Rolfo","Julieta Zaragoza","Carolina Orellano","Franco Almada","Franco García","Veronica Schulthess","Laura Geric","Laura Ingrassia","Cristian Soloa","Claudia Pedri","Carolina Companys","Mariana Menzaghi","Mariana Rodriguez","Gala","Agostina","Carla","Montse","Azul","Carro","Susan","Gaby Pucheta","Marcos Gómez","Alejandra Moreno","David Toscano","Denis Molina","Gonzalo","Isabella 4to","Juan Pablo Cicaré"
       ],
       "Jugadores ARG": [
         "Messi","Di María","Dibu Martínez","De Paul","Enzo Fernández","Julián Álvarez","Lautaro Martínez","Paredes","Otamendi","Cuti Romero","Garnacho","Mac Allister","Lo Celso","Tagliafico","Molina","Palacios","Montiel","Barco","Thiago Almada","Diablito Echeverri",
@@ -261,10 +579,7 @@
         "Maradona","Pelé","Zidane","Ronaldinho","Ronaldo Nazário","Cruyff","Beckenbauer","Maldini","Xavi","Iniesta","Henry","Baggio","Figo","Romário","Shevchenko","Rooney","Ibrahimović","Roberto Carlos","Cafu","Totti",
         "Nedvěd","Gattuso","Pirlo","Kaká","Eto'o","Cannavaro","Del Piero","Stoichkov","Van Basten","Platini"
       ],
-      "Clash Royale": [
-        "Caballero","Arqueras","Gigante","Mini P.E.K.K.A.","Bebé Dragón","Mago","Horda de Esbirros","Montapuercos","Valquiria","Mago de Hielo","Leñador","Bandida","Megacaballero","P.E.K.K.A.","Cementerio","Globo Bombástico","Sabueso de Lava","Minero","Chispitas","Bruja Nocturna","Arquero Mágico","Monje","Campeón Dorado","Reina Arquera","Esqueleto Gigante","Príncipe","Príncipe Oscuro","Barril de Duendes","Duendes con Lanza","Cañón con Ruedas","Tesla","Tornado","Descarga","Bola de Fuego","Cohete","Veneno","Rayo","Tronco","Flechas",
-        "Fantasma Real","Carruaje de Cañón","Pescador","Dragón Eléctrico","Dragones Esqueleto","Fénix","Guardias","Mortero","Ballesta"
-      ],
+      "Clash Royale": [], // ahora viene desde la API como palabras
       "Países": [
         "Estados Unidos","China","India","Brasil","Rusia","Reino Unido","Francia","Alemania","Italia","España",
         "Canadá","México","Japón","Corea del Sur","Australia","Argentina","Chile","Colombia","Perú","Uruguay",
@@ -280,9 +595,10 @@
       players: [],
       selectedCategories: new Set(),
       usedWords: new Set(),
-      currentWord: null, // string o {tipo:"club",nombre,imagen}
+      currentWord: null, // string o {tipo:"club"/"clash",nombre,imagen}
       impostorIdxs: [],
-      impostorCount: 1,
+      impostorCount: 1,   // configuración elegida en el lobby
+      impostorsLeft: 0,   // impostores vivos en la ronda actual
       alive: [],
       revealStep: 0,
       revealed: false,
@@ -330,7 +646,14 @@
         const el = document.createElement('div');
         el.className='selectable';
         el.dataset.cat = cat;
-        const extra = (cat === "Clubes ARG") ? 'API' : (wordPools[cat].length+" palabras");
+        let extra;
+        if(cat === "Clubes ARG" || cat === "Clubes Mundo"){
+          extra = 'API';
+        } else if(cat === "Clash Royale"){
+          extra = 'API (nombres de cartas)';
+        } else {
+          extra = (wordPools[cat].length+" palabras");
+        }
         el.innerHTML = `<strong>${cat}</strong><div class="muted">${extra}</div>`;
         if(state.selectedCategories.has(cat)) el.classList.add('selected');
         box.appendChild(el);
@@ -357,21 +680,27 @@
       banner.classList.remove('hidden');
     }
 
-    // ====== Clubes ARG (MockAPI) ======
-    const API_CLUBES_ARG = "https://6918a60a21a963594870c317.mockapi.io/clubesarg";
+    // ====== Clubes (MockAPI) ======
+    const API_CLUBES_ARG   = "https://6918a60a21a963594870c317.mockapi.io/clubesarg";
+    const API_CLUBES_MUNDO = "https://6918a60a21a963594870c317.mockapi.io/clubesmundo";
 
-    async function pickClubFromAPI(){
+    async function pickFromClubApi(endpoint){
       try{
-        const res = await fetch(API_CLUBES_ARG);
+        const res = await fetch(endpoint);
         const data = await res.json();
 
         if (!Array.isArray(data) || data.length === 0){
-          alert('No hay clubes en la API de Clubes ARG.');
+          alert('No hay clubes en la API seleccionada.');
           return false;
         }
 
-        const disponibles = data.filter(c => !state.usedWords.has(c.nombre));
+        const disponibles = data.filter(c => !state.usedWords.has(c.nombre || c.name));
         const pool = disponibles.length ? disponibles : data;
+
+        if(!pool.length){
+          alert('No hay clubes disponibles en esta API.');
+          return false;
+        }
 
         const elegido = choice(pool);
         const nombre = elegido.nombre || elegido.name || 'Club desconocido';
@@ -392,37 +721,105 @@
       }
     }
 
-    // ====== Juego ======
-    async function pickWord(){
-      const soloClubesArg = state.selectedCategories.size === 1 && state.selectedCategories.has("Clubes ARG");
+    // ====== Clash Royale (MockAPI como palabras) ======
+    const API_CR_COMUNES = "https://6917a7c721a96359486d94bb.mockapi.io/comunes";
+    const API_CR_ALTAS  = "https://6917a7c721a96359486d94bb.mockapi.io/cartas2";
 
-      if (soloClubesArg){
-        const ok = await pickClubFromAPI();
-        return ok;
-      }
+    async function pickClashWordFromApi(){
+      try{
+        const [r1,r2] = await Promise.all([
+          fetch(API_CR_COMUNES),
+          fetch(API_CR_ALTAS)
+        ]);
+        const d1 = await r1.json();
+        const d2 = await r2.json();
 
-      let pool = [];
-      for (const cat of state.selectedCategories){
-        pool = pool.concat(wordPools[cat] || []);
-      }
-      const fresh = pool.filter(w => !state.usedWords.has(w));
-      const usable = fresh.length>0 ? fresh : pool;
-      if(usable.length===0){
-        alert('No hay palabras en las categorías seleccionadas.');
+        const data = [
+          ...(Array.isArray(d1)?d1:[]),
+          ...(Array.isArray(d2)?d2:[])
+        ];
+
+        if(!data.length){
+          alert('No hay cartas de Clash Royale en la API.');
+          return false;
+        }
+
+        const disponibles = data.filter(c => {
+          const nombre = c.name || c.nombre;
+          return nombre && !state.usedWords.has(nombre);
+        });
+        const pool = disponibles.length ? disponibles : data;
+
+        const elegido = choice(pool);
+        const nombre = elegido.name || elegido.nombre || 'Carta desconocida';
+
+        state.currentWord = {
+          tipo: 'clash',
+          nombre,
+          imagen: elegido.imagen || ''
+        };
+
+        state.usedWords.add(nombre);
+        save();
+        return true;
+      }catch(e){
+        console.error(e);
+        alert('Error al obtener cartas de Clash Royale desde la API.');
         return false;
       }
-      state.currentWord = choice(usable);
-      state.usedWords.add(state.currentWord);
-      save();
-      return true;
+    }
+
+    // ====== Juego ======
+    async function pickWord(){
+      if(state.selectedCategories.size === 0){
+        alert('Elegí al menos una categoría.');
+        return false;
+      }
+
+      const cats = Array.from(state.selectedCategories);
+
+      async function tryCategory(cat){
+        if(cat === "Clubes ARG"){
+          return await pickFromClubApi(API_CLUBES_ARG);
+        }
+        if(cat === "Clubes Mundo"){
+          return await pickFromClubApi(API_CLUBES_MUNDO);
+        }
+        if(cat === "Clash Royale"){
+          return await pickClashWordFromApi();
+        }
+
+        const pool = wordPools[cat] || [];
+        if(pool.length === 0) return false;
+
+        const fresh = pool.filter(w => !state.usedWords.has(w));
+        const usable = fresh.length>0 ? fresh : pool;
+        if(usable.length===0) return false;
+
+        state.currentWord = choice(usable);
+        state.usedWords.add(state.currentWord);
+        save();
+        return true;
+      }
+
+      for(let attempt=0; attempt<cats.length*2; attempt++){
+        const cat = choice(cats);
+        const ok = await tryCategory(cat);
+        if(ok) return true;
+      }
+
+      alert('No hay palabras en las categorías seleccionadas.');
+      return false;
     }
 
     function startRound(){
-      const desired = Math.max(1, Math.min(state.impostorCount, Math.max(1, state.players.length-1)));
+      const maxImpostors = Math.max(1, state.players.length - 1);
+      const desired = Math.max(1, Math.min(state.impostorCount, maxImpostors));
+
       const chosen = new Set();
       while(chosen.size < desired){ chosen.add(randInt(state.players.length)); }
       state.impostorIdxs = Array.from(chosen);
-      state.impostorCount = state.impostorIdxs.length;
+      state.impostorsLeft = state.impostorIdxs.length;
 
       state.alive = Array(state.players.length).fill(true);
       state.revealStep = 0;
@@ -460,13 +857,12 @@
     function renderVote(){
       const playersLeft = state.alive.filter(Boolean).length;
       $('#playersLeft').textContent = playersLeft;
-      $('#impostorsLeft').textContent = state.impostorCount;
+      $('#impostorsLeft').textContent = state.impostorsLeft;
       const list = $('#voteList'); list.innerHTML='';
       state.players.forEach((name,i)=>{
         if(!state.alive[i]) return;
         const b = document.createElement('button');
         b.className = 'btn selectable' + (state.selectedAccused===i ? ' selected' : '');
-        b.style.textAlign='left';
         b.innerHTML = `👤 ${escapeHtml(name)}`;
         b.onclick = ()=>{ state.selectedAccused = i; renderVote(); };
         list.appendChild(b);
@@ -479,7 +875,7 @@
       state.alive[accused] = false;
       const wasImpostor = state.impostorIdxs.includes(accused);
       if(wasImpostor){
-        state.impostorCount--;
+        state.impostorsLeft--;
         state.impostorIdxs = state.impostorIdxs.filter(x=>x!==accused);
       }
       showResultsAfterVote(accused, wasImpostor);
@@ -487,13 +883,13 @@
 
     function showResultsAfterVote(accused, wasImpostor){
       const playersLeft = state.alive.filter(Boolean).length;
-      const crewLeft = playersLeft - state.impostorCount;
+      const crewLeft = playersLeft - state.impostorsLeft;
       const accusedText = accused==null? 'Nadie' : state.players[accused];
 
       let outcome = null;
-      if(state.impostorCount === 0){
+      if(state.impostorsLeft === 0){
         outcome = 'crew';
-      } else if(state.impostorCount === crewLeft){
+      } else if(state.impostorsLeft === crewLeft){
         outcome = 'impostors';
       }
 
@@ -501,31 +897,46 @@
         ? '⏸️ Decidieron no eliminar a nadie'
         : (wasImpostor ? '✅ Era el IMPOSTOR' : '❌ No era el impostor');
 
+      let palabraMostrada = '';
+      let imagenMostrada = '';
+      let tipoMostrado = '';
+
+      if(state.currentWord){
+        if(typeof state.currentWord === 'object'){
+          palabraMostrada = state.currentWord.nombre || '';
+          imagenMostrada = state.currentWord.imagen || '';
+          tipoMostrado = state.currentWord.tipo || '';
+        } else {
+          palabraMostrada = String(state.currentWord);
+        }
+      }
+
       let wordBlock = '';
-      if(outcome !== null){
-        let palabraMostrada = '';
-        if(state.currentWord){
-          if(typeof state.currentWord === 'object' && state.currentWord.tipo === 'club'){
-            palabraMostrada = state.currentWord.nombre || '';
-          } else {
-            palabraMostrada = String(state.currentWord);
-          }
-        }
-        if(palabraMostrada){
-          wordBlock = `
-            <p class="muted">Palabra de la ronda:</p>
-            <div class="big">${escapeHtml(palabraMostrada)}</div>
-            <div class="spacer"></div>
-          `;
-        }
-      } else {
+      if(outcome !== null && palabraMostrada){
+        const imgHtml = imagenMostrada
+          ? `<img src="${imagenMostrada}" alt="${escapeHtml(palabraMostrada)}" style="width:120px;height:120px;object-fit:contain;display:block;margin:0 auto 8px;">`
+          : '';
+        const label =
+          tipoMostrado === 'club'  ? 'Club de la ronda:' :
+          tipoMostrado === 'clash' ? 'Carta de la ronda:' :
+          'Palabra de la ronda:';
+
+        wordBlock = `
+          <p class="muted">${label}</p>
+          <div class="big">
+            ${imgHtml}
+            <div>${escapeHtml(palabraMostrada)}</div>
+          </div>
+          <div class="spacer"></div>
+        `;
+      } else if(outcome === null){
         wordBlock = `
           <p class="muted">La palabra permanecerá oculta hasta que termine la partida.</p>
           <div class="spacer"></div>
         `;
       }
 
-      let statusLine = `👥 Vivos: <strong>${playersLeft}</strong> | 🎭 Impostores restantes: <strong>${state.impostorCount}</strong>`;
+      let statusLine = `👥 Vivos: <strong>${playersLeft}</strong> | 🎭 Impostores restantes: <strong>${state.impostorsLeft}</strong>`;
       if(outcome==='crew') statusLine += ' — 🏆 Ganan los tripulantes';
       if(outcome==='impostors') statusLine += ' — 🏴 Ganan los impostores';
 
@@ -555,7 +966,7 @@
       show('#screen-results');
     }
 
-    // ====== Cartas Clash Royale (MockAPI) ======
+    // ====== Cartas Clash Royale (MockAPI visual) ======
     const API_COMUNES = "https://6917a7c721a96359486d94bb.mockapi.io/comunes";
     const API_ALTAS  = "https://6917a7c721a96359486d94bb.mockapi.io/cartas2";
 
@@ -722,6 +1133,15 @@
           text = `
             ${img}
             <div>Tu club es: <strong>${escapeHtml(nombre)}</strong></div>
+          `;
+        } else if (state.currentWord && typeof state.currentWord === 'object' && state.currentWord.tipo === 'clash'){
+          const nombre = state.currentWord.nombre || 'Carta desconocida';
+          const img = state.currentWord.imagen
+            ? `<img src="${state.currentWord.imagen}" alt="${escapeHtml(nombre)}" style="width:120px;height:120px;object-fit:contain;display:block;margin:0 auto 8px;">`
+            : '';
+          text = `
+            ${img}
+            <div>Tu carta es: <strong>${escapeHtml(nombre)}</strong></div>
           `;
         } else {
           text = `Tu palabra es: <strong>${escapeHtml(state.currentWord)}</strong>`;
