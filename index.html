@@ -1,383 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Impostor</title>
-
-  <style>
-    :root{
-      --bg:#0e0e0e;              /* Fondo negro estilo Netflix */
-      --panel:rgba(18,18,18,.85);
-      --panel-2:rgba(10,10,10,.98);
-      --text:#e5e7eb;            /* Gris claro */
-      --muted:#9ca3af;
-      --line:#27272a;
-      --accent:#b80000;          /* Rojo C */
-      --ok:#22c55e;
-      --warn:#facc15;
-      --shadow:0 22px 55px rgba(0,0,0,.9);
-    }
-
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family:Inter,system-ui,Arial,sans-serif;
-      background:var(--bg);
-      color:var(--text);
-    }
-
-    .container{
-      max-width:1100px;
-      margin:0 auto;
-      padding:24px;
-      padding-left:clamp(12px,3vw,24px);
-      padding-right:clamp(12px,3vw,24px);
-    }
-
-    /* HEADER centrado */
-    header{
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      gap:12px;
-      text-align:center;
-      margin-bottom:20px;
-    }
-    .brand{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-    }
-    .logo{
-      width:40px;
-      height:40px;
-      border-radius:12px;
-      background:radial-gradient(circle at 30% 20%, #ffcccc 0, #b80000 40%, #2b0000 100%);
-      box-shadow:0 12px 30px rgba(0,0,0,.95);
-      display:grid;
-      place-items:center;
-      font-weight:800;
-      font-size:22px;
-    }
-    header h1{
-      margin:0;
-      font-size:clamp(20px,3.5vw,32px);
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      color:var(--accent);
-    }
-    .header-actions{
-      justify-content:center;
-    }
-
-    /* Cards / layout general */
-    .card{
-      background:linear-gradient(150deg, var(--panel), var(--panel-2));
-      border:1px solid rgba(148,163,184,0.22);
-      border-radius:22px;
-      box-shadow:var(--shadow);
-      backdrop-filter:blur(16px);
-      position:relative;
-      overflow:hidden;
-    }
-    .card::before{
-      content:"";
-      position:absolute;
-      inset:-40%;
-      background:linear-gradient(120deg, rgba(255,255,255,0.08), transparent 60%);
-      mix-blend-mode:soft-light;
-      opacity:.7;
-      pointer-events:none;
-    }
-    .card .content{
-      position:relative;
-      padding:20px;
-      z-index:1;
-    }
-
-    .grid{display:grid;gap:16px}
-    .grid.cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .grid.cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}
-    .grid.auto{grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
-    @media (max-width:900px){
-      .grid.cols-2{grid-template-columns:1fr}
-      .grid.cols-3{grid-template-columns:repeat(2,minmax(0,1fr))}
-    }
-    @media (max-width:640px){
-      .grid.cols-3{grid-template-columns:1fr}
-    }
-
-    /* Home: siempre en columna */
-    .home-screen{
-      display:flex;
-      flex-direction:column;
-      gap:16px;
-    }
-
-    .btn{
-      border:none;
-      border-radius:16px;
-      padding:12px 16px;
-      min-height:44px;
-      cursor:pointer;
-      font-weight:800;
-      font-size:14px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      box-shadow:0 16px 32px rgba(0,0,0,.9);
-      background:linear-gradient(135deg,#ffffff,#d1d5db);
-      color:#0b0f1a;
-      touch-action:manipulation;
-      -webkit-tap-highlight-color:transparent;
-      transition:
-        transform .15s ease-out,
-        box-shadow .15s ease-out,
-        background .15s ease-out,
-        border-color .15s ease-out,
-        color .15s ease-out;
-    }
-    .btn.primary{
-      background:linear-gradient(135deg,#b80000,#e01313);
-      color:#fff;
-      border:1px solid rgba(184,0,0,.7);
-      box-shadow:
-        0 0 14px rgba(184,0,0,.7),
-        0 20px 40px rgba(0,0,0,1);
-    }
-    .btn.ghost{
-      background:radial-gradient(circle at 0 0, rgba(184,0,0,.16), rgba(18,18,18,.95));
-      color:var(--text);
-      border:1px solid rgba(75,85,99,.9);
-    }
-    .btn.success{
-      background:linear-gradient(135deg,var(--ok),#4ade80);
-      color:#022c22;
-      border:1px solid rgba(34,197,94,.85);
-    }
-    .btn.warning{
-      background:linear-gradient(135deg,var(--warn),#fbbf24);
-      color:#111827;
-      border:1px solid rgba(250,204,21,.9);
-    }
-    .btn:hover{
-      transform:translateY(-1px);
-      box-shadow:0 24px 50px rgba(0,0,0,1);
-    }
-    .btn:active{
-      transform:scale(.97);
-      box-shadow:0 14px 28px rgba(0,0,0,1);
-    }
-    .btn:disabled{
-      opacity:.45;
-      cursor:not-allowed;
-      box-shadow:none;
-      transform:none;
-      background:linear-gradient(135deg,#4b4b4b,#3a3a3a);
-      border:1px solid #444;
-      color:#e5e7eb;
-    }
-
-    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-    .center{text-align:center}
-    .spacer{height:14px}
-    .muted{color:var(--muted);font-size:14px}
-    .title{
-      font-size:clamp(18px,2.6vw,26px);
-      margin:0 0 8px;
-      font-weight:900;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-      color:var(--accent);
-    }
-    input[type="text"]{
-      width:100%;
-      padding:11px 13px;
-      border-radius:14px;
-      background:#121212;
-      border:1px solid #333;
-      color:var(--text);
-      font-size:14px;
-      outline:none;
-      transition:border-color .15s, box-shadow .15s, background .15s;
-    }
-    input[type="text"]:focus{
-      border-color:var(--accent);
-      box-shadow:0 0 0 1px rgba(184,0,0,.8),0 0 12px rgba(184,0,0,.6);
-      background:#151515;
-    }
-
-    .players{display:flex;flex-wrap:wrap;gap:8px}
-    .pill{
-      background:rgba(18,18,18,.9);
-      border:1px solid #3f3f46;
-      color:var(--text);
-      border-radius:999px;
-      padding:6px 10px;
-      display:flex;
-      align-items:center;
-      gap:6px;
-      font-size:13px;
-    }
-    .pill .x{cursor:pointer;opacity:.85;font-size:11px}
-
-    .chip{
-      padding:8px 12px;
-      border-radius:999px;
-      border:1px solid rgba(148,163,184,.38);
-      background:rgba(15,15,15,.9);
-      font-size:12px;
-      color:var(--muted);
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-    }
-
-    .selectable{
-      border:1px solid var(--line);
-      background:#141414;
-      padding:12px;
-      border-radius:16px;
-      cursor:pointer;
-      color:#ffffff;
-      transition:border .15s ease,transform .08s ease,box-shadow .15s ease,background .15s ease;
-      display:flex;
-      flex-direction:column;
-      gap:4px;
-      font-size:13px;
-    }
-    .selectable strong{
-      font-size:13px;
-      letter-spacing:.06em;
-      text-transform:uppercase;
-    }
-    .selectable .muted{font-size:11px}
-    .selectable:hover{
-      transform:translateY(-2px);
-      border-color:var(--accent);
-      box-shadow:0 14px 28px rgba(0,0,0,.9);
-    }
-    .selectable.selected{
-      border:1px solid var(--accent);
-      box-shadow:
-        0 0 0 1px rgba(184,0,0,.7),
-        0 0 20px rgba(184,0,0,.7);
-      background:radial-gradient(circle at 0 0, rgba(184,0,0,.22), #141414);
-    }
-
-    .notice{
-      padding:12px 14px;
-      border-radius:12px;
-      background:#0c182e;
-      border:1px dashed #23314f;
-    }
-    .big{
-      font-size:clamp(22px,6vw,38px);
-      font-weight:900;
-      letter-spacing:.5px;
-      margin:6px 0;
-      word-break:break-word;
-    }
-    .list{list-style:none;margin:0;padding:0}
-    .list li{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:10px 0;
-      border-bottom:1px dashed #172033;
-      font-size:14px;
-    }
-    .footer-nav{
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      margin-top:16px;
-      position:sticky;
-      bottom:0;
-      background:linear-gradient(180deg,transparent,rgba(0,0,0,.95));
-      backdrop-filter:blur(12px);
-      padding:8px 0 6px;
-      border-radius:18px 18px 0 0;
-    }
-    .hidden{display:none !important}
-    .vote-instructions{
-      color:#fbbf24;
-      font-weight:800;
-      letter-spacing:.3px;
-      font-size:14px;
-    }
-    .vote-instructions::before{content:"⚠️ ";}
-
-    /* Banner de categorías activas */
-    #roundBanner{
-      margin:12px 0;
-    }
-    #roundBanner .chip{
-      box-shadow:0 0 18px rgba(184,0,0,.4);
-      border-color:rgba(184,0,0,.8);
-    }
-
-    /* Cartas Clash Royale */
-    .cards-toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
-    .cards-toolbar .btn{
-      min-height:36px;
-      padding:8px 12px;
-      font-size:13px;
-      box-shadow:none;
-    }
-    #cardsGrid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
-      gap:14px;
-    }
-    .cr-card{
-      background:linear-gradient(180deg,#020617,#020818);
-      border-radius:16px;
-      border:1px solid var(--line);
-      padding:12px;
-      text-align:center;
-      box-shadow:var(--shadow);
-    }
-    .cr-card-img{
-      width:90px;
-      height:90px;
-      object-fit:contain;
-      margin-bottom:6px;
-    }
-    .cr-card-name{
-      margin:4px 0 2px;
-      font-size:14px;
-      font-weight:800;
-      color:#e5e7eb;
-    }
-    .cr-card-rareza{
-      font-size:12px;
-      color:var(--muted);
-    }
-
-    /* Votación: seleccionado más claro */
-    #voteList .btn.selectable{
-      text-align:left;
-      justify-content:flex-start;
-      background:#101b34;
-      border-radius:16px;
-      border:1px solid #1f2937;
-      box-shadow:none;
-    }
-    #voteList .btn.selectable.selected{
-      border-color:var(--accent);
-      box-shadow:
-        0 0 0 1px rgba(184,0,0,.8),
-        0 0 20px rgba(184,0,0,.5);
-      background:radial-gradient(circle at 0 0, rgba(184,0,0,.2), #101b34);
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
   <div class="container">
     <header>
@@ -414,7 +44,9 @@
             <button class="btn ghost" id="btnOpenCards">Cartas Clash Royale</button>
           </div>
           <div class="spacer"></div>
-          <div class="notice">Tip: elegí <strong>categorías</strong>. Todos reciben la misma palabra excepto el <strong>Impostor</strong>, que recibe <em>???</em>.</div>
+          <div class="notice">Tip: elegí <strong>categorías</strong>. Todos reciben la misma palabra excepto el
+            <strong>Impostor</strong>, que recibe <em>???</em>.
+          </div>
         </div>
       </div>
 
@@ -436,33 +68,40 @@
     <!-- LOBBY -->
     <section id="screen-lobby" class="hidden">
       <div class="grid cols-2">
-        <div class="card"><div class="content">
-          <h2 class="title">Jugadores</h2>
-          <div class="row">
-            <input id="playerName" type="text" maxlength="14" placeholder="Agregar jugador (Enter)" />
-            <button class="btn" id="addPlayer">Agregar</button>
+        <div class="card">
+          <div class="content">
+            <h2 class="title">Jugadores</h2>
+            <div class="row">
+              <input id="playerName" type="text" maxlength="14" placeholder="Agregar jugador (Enter)" />
+              <button class="btn" id="addPlayer">Agregar</button>
+            </div>
+            <div class="spacer"></div>
+            <div class="players" id="players"></div>
+            <div class="spacer"></div>
+            <span class="muted">Mínimo 3 jugadores (máximo 16).</span>
           </div>
-          <div class="spacer"></div>
-          <div class="players" id="players"></div>
-          <div class="spacer"></div>
-          <span class="muted">Mínimo 3 jugadores (máximo 16).</span>
-        </div></div>
-        <div class="card"><div class="content">
-          <h2 class="title">Categorías</h2>
-          <div id="categories" class="grid cols-3"></div>
-          <div class="spacer"></div>
-          <div class="row">
-            <button class="btn ghost" id="toggleAllCats">Seleccionar todas</button>
-            <span class="muted">Elegí al menos 1</span>
+        </div>
+        <div class="card">
+          <div class="content">
+            <h2 class="title">Categorías</h2>
+            <div id="categories" class="grid cols-3"></div>
+            <div class="spacer"></div>
+            <div class="row">
+              <button class="btn ghost" id="toggleAllCats">Seleccionar todas</button>
+              <span class="muted">Elegí al menos 1</span>
+            </div>
+            <div class="spacer"></div>
+            <h3 class="title" style="margin-top:8px">Impostores</h3>
+            <div class="row" id="impostorPicker">
+              <label class="chip"><input type="radio" name="impostors" value="1" checked style="margin-right:8px"> 1
+                impostor</label>
+              <label class="chip"><input type="radio" name="impostors" value="2" style="margin-right:8px"> 2
+                impostores</label>
+              <label class="chip"><input type="radio" name="impostors" value="3" style="margin-right:8px"> 3
+                impostores</label>
+            </div>
           </div>
-          <div class="spacer"></div>
-          <h3 class="title" style="margin-top:8px">Impostores</h3>
-          <div class="row" id="impostorPicker">
-            <label class="chip"><input type="radio" name="impostors" value="1" checked style="margin-right:8px"> 1 impostor</label>
-            <label class="chip"><input type="radio" name="impostors" value="2" style="margin-right:8px"> 2 impostores</label>
-            <label class="chip"><input type="radio" name="impostors" value="3" style="margin-right:8px"> 3 impostores</label>
-          </div>
-        </div></div>
+        </div>
       </div>
       <div class="footer-nav">
         <button class="btn ghost" id="backMenu2">⬅️ Menú</button>
@@ -475,62 +114,70 @@
 
     <!-- REVEAL -->
     <section id="screen-reveal" class="hidden">
-      <div class="card"><div class="content center">
-        <div class="muted">Jugador</div>
-        <div class="big" id="revealPlayer">—</div>
-        <div class="spacer"></div>
-        <div class="notice" id="revealCard">Toquen <strong>Mostrar</strong> para ver su palabra/rol</div>
-        <div class="spacer"></div>
-        <div class="row center" style="justify-content:center;gap:12px;flex-wrap:wrap">
-          <button class="btn" id="btnShow" style="flex:1 1 200px;max-width:360px">Mostrar</button>
-          <button class="btn ghost" id="btnNext" style="flex:1 1 200px;max-width:360px">Siguiente ▶️</button>
+      <div class="card">
+        <div class="content center">
+          <div class="muted">Jugador</div>
+          <div class="big" id="revealPlayer">—</div>
+          <div class="spacer"></div>
+          <div class="notice" id="revealCard">Toquen <strong>Mostrar</strong> para ver su palabra/rol</div>
+          <div class="spacer"></div>
+          <div class="row center" style="justify-content:center;gap:12px;flex-wrap:wrap">
+            <button class="btn" id="btnShow" style="flex:1 1 200px;max-width:360px">Mostrar</button>
+            <button class="btn ghost" id="btnNext" style="flex:1 1 200px;max-width:360px">Siguiente ▶️</button>
+          </div>
+          <div class="spacer"></div>
+          <div class="muted">Consejo: no digas tu palabra en voz alta 😉</div>
         </div>
-        <div class="spacer"></div>
-        <div class="muted">Consejo: no digas tu palabra en voz alta 😉</div>
-      </div></div>
+      </div>
     </section>
 
     <!-- DISCUSIÓN -->
     <section id="screen-discuss" class="hidden">
-      <div class="card"><div class="content center">
-        <h2 class="title">¡A debatir!</h2>
-        <p class="muted">Hablen 1–3 minutos. Cuando estén listos, pasen a votar.</p>
-        <div class="spacer"></div>
-        <button class="btn primary" id="goVote">🗳️ Ir a votar</button>
-      </div></div>
+      <div class="card">
+        <div class="content center">
+          <h2 class="title">¡A debatir!</h2>
+          <p class="muted">Hablen 1–3 minutos. Cuando estén listos, pasen a votar.</p>
+          <div class="spacer"></div>
+          <button class="btn primary" id="goVote">🗳️ Ir a votar</button>
+        </div>
+      </div>
     </section>
 
     <!-- VOTACIÓN (GRUPAL) -->
     <section id="screen-vote" class="hidden">
-      <div class="card"><div class="content">
-        <div class="row" style="justify-content:space-between">
-          <div class="chip">👥 Vivos: <strong id="playersLeft">—</strong></div>
-          <div class="chip">🎭 Impostores: <strong id="impostorsLeft">—</strong></div>
+      <div class="card">
+        <div class="content">
+          <div class="row" style="justify-content:space-between">
+            <div class="chip">👥 Vivos: <strong id="playersLeft">—</strong></div>
+            <div class="chip">🎭 Impostores: <strong id="impostorsLeft">—</strong></div>
+          </div>
+          <div class="spacer"></div>
+          <div class="vote-instructions">Elijan en persona y luego toquen al acusado:</div>
+          <div class="spacer"></div>
+          <div id="voteList" class="grid auto"></div>
+          <div class="spacer"></div>
+          <div class="row">
+            <button class="btn success" id="confirmVote">Confirmar decisión</button>
+            <button class="btn ghost" id="skipVote">No eliminar</button>
+          </div>
         </div>
-        <div class="spacer"></div>
-        <div class="vote-instructions">Elijan en persona y luego toquen al acusado:</div>
-        <div class="spacer"></div>
-        <div id="voteList" class="grid auto"></div>
-        <div class="spacer"></div>
-        <div class="row">
-          <button class="btn success" id="confirmVote">Confirmar decisión</button>
-          <button class="btn ghost" id="skipVote">No eliminar</button>
-        </div>
-      </div></div>
+      </div>
     </section>
 
     <!-- RESULTADOS -->
     <section id="screen-results" class="hidden">
-      <div class="card"><div class="content center">
-        <h2 class="title">Resultados</h2>
-        <div id="resultsBox"></div>
-        <div class="spacer"></div>
-        <div class="row center" style="justify-content:center">
-          <button class="btn primary hidden" id="continueRound">Continuar</button>
-          <button class="btn" id="playAgain">🔁 Nueva ronda</button>
-          <button class="btn ghost" id="toLobby">Lobby</button>
+      <div class="card">
+        <div class="content center">
+          <h2 class="title">Resultados</h2>
+          <div id="resultsBox"></div>
+          <div class="spacer"></div>
+          <div class="row center" style="justify-content:center">
+            <button class="btn primary hidden" id="continueRound">Continuar</button>
+            <button class="btn" id="playAgain">🔁 Nueva ronda</button>
+            <button class="btn ghost" id="toLobby">Lobby</button>
+          </div>
         </div>
-      </div></div>
+      </div>
     </section>
 
     <!-- CARTAS CLASH ROYALE (solo API) -->
@@ -546,647 +193,423 @@
             <button class="btn ghost" data-filter="Especial" id="btnFilterEspeciales">Especiales</button>
             <button class="btn ghost" data-filter="Épica" id="btnFilterEpicas">Épicas</button>
             <button class="btn ghost" data-filter="Legendaria" id="btnFilterLegendarias">Legendarias</button>
-            <button class="btn ghost" data-filter="Campeón" id="btnFilterCampeones">Campeones</button>
-          </div>
-          <div class="spacer"></div>
-          <div id="cardsGrid"></div>
-        </div>
-      </div>
-      <div class="footer-nav">
-        <button class="btn ghost" id="backFromCards">⬅️ Menú</button>
-      </div>
-    </section>
-  </div>
-
-  <script>
-    // ====== Palabras (categorías) ======
-    const wordPools = {
-      "Clubes ARG": [],       // API
-      "Clubes Mundo": [],     // API
-      "Jugadores ARG": [],    // API
-      "Jugadores Mundo": [],  // API
-      "Clash Royale": [],     // API (cartas)
-      "CESD":[
-        "Lucho","Pedro","Spalletti","Luana","Francisco","Lucas","Tiziano","Enzo","Santiago","Uriel","Guada","Uma","Aileen","Sofia Storero","Genaro","Joaquin","Bruno Farias","Ursula","Camila 3ro","Guada 3ro","Mechi","Facu Ortiz","Dario","Fede Torre","Oriana","Mariano","Jorge Flores","Soledad Rolfo","Julieta Zaragoza","Carolina Orellano","Franco Almada","Franco García","Veronica Schulthess","Laura Geric","Laura Ingrassia","Cristian Soloa","Claudia Pedri","Carolina Companys","Mariana Menzaghi","Mariana Rodriguez","Gala","Agostina","Carla","Montse","Azul","Carro","Susan","Gaby Pucheta","Marcos Gómez","Alejandra Moreno","David Toscano","Denis Molina","Gonzalo","Isabella 4to","Juan Pablo Cicaré"
-      ],
-      "Leyendas": [
-        "Maradona","Pelé","Zidane","Ronaldinho","Ronaldo Nazário","Cruyff","Beckenbauer","Maldini","Xavi","Iniesta","Henry","Baggio","Figo","Romário","Shevchenko","Rooney","Ibrahimović","Roberto Carlos","Cafu","Totti",
-        "Nedvěd","Gattuso","Pirlo","Kaká","Eto'o","Cannavaro","Del Piero","Stoichkov","Van Basten","Platini"
-      ],
-      "Países": [
-        "Estados Unidos","China","India","Brasil","Rusia","Reino Unido","Francia","Alemania","Italia","España",
-        "Canadá","México","Japón","Corea del Sur","Australia","Argentina","Chile","Colombia","Perú","Uruguay",
-        "Portugal","Países Bajos","Bélgica","Suiza","Suecia","Noruega","Dinamarca","Finlandia","Polonia","Austria",
-        "Irlanda","Grecia","República Checa","Hungría","Turquía","Israel","Arabia Saudita","Emiratos Árabes Unidos","Qatar","Egipto",
-        "Marruecos","Sudáfrica","Nigeria","Kenia","Argelia","Etiopía","Ghana","Indonesia","Tailandia","Vietnam"
-      ]
-    };
-
-    // ====== Estado ======
-    const state = {
-      room: null,
-      players: [],
-      selectedCategories: new Set(),
-      usedWords: new Set(),
-      currentWord: null, // string o {tipo, nombre, imagen}
-      impostorIdxs: [],
-      impostorCount: 1,
-      alive: [],
-      revealStep: 0,
-      revealed: false,
-      selectedAccused: null,
-    };
-
-    // ====== Helpers ======
-    const $ = sel => document.querySelector(sel);
-    const randInt = n => Math.floor(Math.random()*n);
-    const choice = arr => arr[Math.floor(Math.random()*arr.length)];
-    const genRoom = () => Array.from({length:4},()=>"ABCDEFGHJKLMNPQRSTUVWXYZ23456789"[randInt(32)]).join('');
-    const escapeHtml = str => String(str).replace(/[&<>"']/g, s=>({"&":"&amp;","<":"&lt;","&gt;":">","\"":"&quot;","'":"&#39;"}[s]));
-    function getImpostorNames(){ return state.impostorIdxs.map(i=>state.players[i]).filter(Boolean); }
-
-    const save = () => localStorage.setItem('impostor-lite', JSON.stringify({players:state.players, used:[...state.usedWords]}));
-    const load = () => {
-      try{
-        const d = JSON.parse(localStorage.getItem('impostor-lite')||'{}');
-        if(Array.isArray(d.players)) state.players = d.players.slice(0,16);
-        if(Array.isArray(d.used)) state.usedWords = new Set(d.used);
-      }catch{}
-    };
-
-    // ====== Navegación / Render ======
-    function show(id){
-      ["#screen-menu","#screen-lobby","#screen-reveal","#screen-discuss",
-       "#screen-vote","#screen-results","#screen-cards"
-      ].forEach(
-        s=>$(s).classList.add('hidden')
-      );
-      $(id).classList.remove('hidden');
-    }
-
-    function renderPlayers(){
-      const wrap = $('#players'); wrap.innerHTML='';
-      state.players.forEach((name,i)=>{
-        const el = document.createElement('div');
-        el.className='pill';
-        el.innerHTML = `<span>${escapeHtml(name)}</span> <span class="x" title="Quitar" data-i="${i}">✖</span>`;
-        wrap.appendChild(el);
-      });
-    }
-
-    function renderCategories(){
-      const box = $('#categories'); box.innerHTML='';
-      Object.keys(wordPools).forEach(cat=>{
-        const el = document.createElement('div');
-        el.className='selectable';
-        el.dataset.cat = cat;
-        let extra;
-        if(
-          cat === "Clubes ARG" ||
-          cat === "Clubes Mundo" ||
-          cat === "Jugadores ARG" ||
-          cat === "Jugadores Mundo" ||
-          cat === "Clash Royale"
-        ){
-          extra = 'API';
-        } else {
-          extra = (wordPools[cat].length+" palabras");
-        }
-        el.innerHTML = `<strong>${cat}</strong><div class="muted">${extra}</div>`;
-        if(state.selectedCategories.has(cat)) el.classList.add('selected');
-        box.appendChild(el);
-      });
-    }
-
-    function updateStartButton(){
-      const ok = state.players.length>=3 && state.selectedCategories.size>0 && !!state.currentWord;
-      const btn = $('#startRound');
-      if(btn) btn.disabled = !ok;
-    }
-
-    function updateRoundBanner(){
-      const banner = $('#roundBanner');
-      const textEl = $('#roundCatsText');
-      if(!banner || !textEl) return;
-      if(state.selectedCategories.size===0){
-        banner.classList.add('hidden');
-        textEl.textContent = '';
-        return;
-      }
-      const cats = Array.from(state.selectedCategories);
-      textEl.textContent = cats.join(' · ');
-      banner.classList.remove('hidden');
-    }
-
-    // ====== APIs ======
-    const API_CLUBES_ARG   = "https://6918a60a21a963594870c317.mockapi.io/clubesarg";
-    const API_CLUBES_MUNDO = "https://6918a60a21a963594870c317.mockapi.io/clubesmundo";
-    const API_JUG_ARG      = "https://691930719ccba073ee9257b2.mockapi.io/jugadoresarg";
-    const API_JUG_MUNDO    = "https://691930719ccba073ee9257b2.mockapi.io/jugadoresmundo";
-
-    const API_COMUNES = "https://6917a7c721a96359486d94bb.mockapi.io/comunes";
-    const API_ALTAS  = "https://6917a7c721a96359486d94bb.mockapi.io/cartas2";
-
-    let cacheClubesArg = null;
-    let cacheClubesMundo = null;
-    let cacheJugArg = null;
-    let cacheJugMundo = null;
-    let allCards = [];
-
-    async function ensureClubesArg(){
-      if(!cacheClubesArg){
-        const r = await fetch(API_CLUBES_ARG);
-        cacheClubesArg = await r.json();
-      }
-      return cacheClubesArg;
-    }
-    async function ensureClubesMundo(){
-      if(!cacheClubesMundo){
-        const r = await fetch(API_CLUBES_MUNDO);
-        cacheClubesMundo = await r.json();
-      }
-      return cacheClubesMundo;
-    }
-    async function ensureJugArg(){
-      if(!cacheJugArg){
-        const r = await fetch(API_JUG_ARG);
-        cacheJugArg = await r.json();
-      }
-      return cacheJugArg;
-    }
-    async function ensureJugMundo(){
-      if(!cacheJugMundo){
-        const r = await fetch(API_JUG_MUNDO);
-        cacheJugMundo = await r.json();
-      }
-      return cacheJugMundo;
-    }
-
-    async function ensureCardsLoaded(){
-      if(allCards.length) return allCards;
-      const r1 = await fetch(API_COMUNES);
-      const r2 = await fetch(API_ALTAS);
-      const d1 = await r1.json();
-      const d2 = await r2.json();
-      allCards = [...d1, ...d2];
-      return allCards;
-    }
-
-    // ====== Helpers: pick desde APIs ======
-    async function pickFromApi(type){
-      let data;
-      if(type === 'club-arg'){
-        data = await ensureClubesArg();
-      } else if(type === 'club-mundo'){
-        data = await ensureClubesMundo();
-      } else if(type === 'jug-arg'){
-        data = await ensureJugArg();
-      } else if(type === 'jug-mundo'){
-        data = await ensureJugMundo();
-      } else {
-        return false;
-      }
-
-      if(!Array.isArray(data) || data.length===0){
-        alert('No hay datos en la API seleccionada.');
-        return false;
-      }
-
-      const disponibles = data.filter(item => !state.usedWords.has(item.nombre));
-      const pool = disponibles.length ? disponibles : data;
-      const elegido = choice(pool);
-      const nombre = elegido.nombre || elegido.name || 'Sin nombre';
-      const imagen = elegido.imagen || elegido.image || '';
-
-      state.currentWord = { tipo:type, nombre, imagen };
-      state.usedWords.add(nombre);
-      save();
-      return true;
-    }
-
-    async function pickFromClashApi(){
-      const data = await ensureCardsLoaded();
-      if(!Array.isArray(data) || data.length === 0){
-        alert('No hay cartas en la API de Clash Royale.');
-        return false;
-      }
-
-      const disponibles = data.filter(c => !state.usedWords.has(c.name));
-      const pool = disponibles.length ? disponibles : data;
-      const elegido = choice(pool);
-      const nombre = elegido.name || 'Carta';
-      const imagen = elegido.imagen || elegido.image || '';
-
-      state.currentWord = {
-        tipo:'cr-card',
-        nombre,
-        imagen
-      };
-      state.usedWords.add(nombre);
-      save();
-      return true;
-    }
-
-    // ====== Juego: elegir palabra mezclando categorías ======
-    async function pickWord(){
-      if(state.selectedCategories.size===0){
-        alert('Elegí al menos una categoría.');
-        return false;
-      }
-
-      const cats = Array.from(state.selectedCategories);
-      const cat = choice(cats); // categoría elegida para esta ronda
-
-      // Categorías API
-      if(cat === "Clubes ARG"){
-        return await pickFromApi('club-arg');
-      }
-      if(cat === "Clubes Mundo"){
-        return await pickFromApi('club-mundo');
-      }
-      if(cat === "Jugadores ARG"){
-        return await pickFromApi('jug-arg');
-      }
-      if(cat === "Jugadores Mundo"){
-        return await pickFromApi('jug-mundo');
-      }
-      if(cat === "Clash Royale"){
-        return await pickFromClashApi();
-      }
-
-      // Categorías con arrays (CESD, Leyendas, Países)
-      let pool = wordPools[cat] || [];
-      if(!pool.length){
-        alert('No hay palabras en la categoría seleccionada.');
-        return false;
-      }
-
-      const fresh = pool.filter(w => !state.usedWords.has(w));
-      const usable = fresh.length ? fresh : pool;
-      const word = choice(usable);
-
-      state.currentWord = word;
-      state.usedWords.add(word);
-      save();
-      return true;
-    }
-
-    function startRound(){
-      const desired = Math.max(1, Math.min(state.impostorCount, Math.max(1, state.players.length-1)));
-      const chosen = new Set();
-      while(chosen.size < desired){
-        chosen.add(randInt(state.players.length));
-      }
-      state.impostorIdxs = Array.from(chosen);
-      state.impostorCount = state.impostorIdxs.length;
-
-      state.alive = Array(state.players.length).fill(true);
-      state.revealStep = 0;
-      state.revealed = false;
-      updateRoundBanner();
-      show('#screen-reveal');
-      renderReveal();
-      $('#impostorsLeft').textContent = state.impostorCount;
-    }
-
-    function renderReveal(){
-      const i = state.revealStep;
-      const name = state.players[i] || '—';
-      $('#revealPlayer').textContent = name;
-      state.revealed = false;
-      $('#btnShow').disabled = false;
-      $('#revealCard').innerHTML = 'Toquen <strong>Mostrar</strong> para ver su palabra/rol';
-    }
-
-    function nextReveal(){
-      if(!state.revealed){
-        alert('Primero toca "Mostrar" para ver tu rol.');
-        return;
-      }
-      if(state.revealStep < state.players.length-1){
-        state.revealStep++;
-        renderReveal();
-      } else {
-        show('#screen-discuss');
-      }
-    }
-
-    function beginVoting(){
-      state.selectedAccused = null;
-      show('#screen-vote');
-      renderVote();
-    }
-
-    function renderVote(){
-      const playersLeft = state.alive.filter(Boolean).length;
-      $('#playersLeft').textContent = playersLeft;
-      $('#impostorsLeft').textContent = state.impostorCount;
-      const list = $('#voteList'); list.innerHTML='';
-      state.players.forEach((name,i)=>{
-        if(!state.alive[i]) return;
-        const b = document.createElement('button');
-        b.className = 'btn selectable' + (state.selectedAccused===i ? ' selected' : '');
-        b.style.textAlign='left';
-        b.innerHTML = `👤 ${escapeHtml(name)}`;
-        b.onclick = ()=>{ state.selectedAccused = i; renderVote(); };
-        list.appendChild(b);
-      });
-    }
-
-    function confirmVote(){
-      if(state.selectedAccused==null){
-        alert('Elegí a quién acusan.');
-        return;
-      }
-      const accused = state.selectedAccused;
-      state.alive[accused] = false;
-      const wasImpostor = state.impostorIdxs.includes(accused);
-      if(wasImpostor){
-        state.impostorCount--;
-        state.impostorIdxs = state.impostorIdxs.filter(x=>x!==accused);
-      }
-      showResultsAfterVote(accused, wasImpostor);
-    }
-
-    function showResultsAfterVote(accused, wasImpostor){
-      const playersLeft = state.alive.filter(Boolean).length;
-      const crewLeft = playersLeft - state.impostorCount;
-      const accusedText = accused==null? 'Nadie' : state.players[accused];
-
-      let outcome = null;
-      if(state.impostorCount === 0){
-        outcome = 'crew';
-      } else if(state.impostorCount === crewLeft){
-        outcome = 'impostors';
-      }
-
-      const verdict = accused==null
-        ? '⏸️ Decidieron no eliminar a nadie'
-        : (wasImpostor ? '✅ Era el IMPOSTOR' : '❌ No era el impostor');
-
-      let wordBlock = '';
-      if(outcome !== null){
-        let palabraMostrada = '';
-        if(state.currentWord){
-          if(typeof state.currentWord === 'object'){
-            palabraMostrada = state.currentWord.nombre || '';
-          } else {
-            palabraMostrada = String(state.currentWord);
-          }
-        }
-        if(palabraMostrada){
-          wordBlock = `
-            <p class="muted">Palabra de la ronda:</p>
-            <div class="big">${escapeHtml(palabraMostrada)}</div>
-            <div class="spacer"></div>
-          `;
-        }
-      } else {
-        wordBlock = `
-          <p class="muted">La palabra permanecerá oculta hasta que termine la partida.</p>
-          <div class="spacer"></div>
-        `;
-      }
-
-      let statusLine = `👥 Vivos: <strong>${playersLeft}</strong> | 🎭 Impostores restantes: <strong>${state.impostorCount}</strong>`;
-      if(outcome==='crew') statusLine += ' — 🏆 Ganan los tripulantes';
-      if(outcome==='impostors') statusLine += ' — 🏴 Ganan los impostores';
-
-      const impostorsLine = outcome==='impostors'
-        ? `<p class="muted">Impostor(es): <strong>${getImpostorNames().map(escapeHtml).join(', ')}</strong></p>`
-        : '';
-
-      $('#resultsBox').innerHTML = `
-        ${wordBlock}
-        <p>Acusado: <strong>${escapeHtml(accusedText)}</strong></p>
-        <p>${verdict}</p>
-        ${impostorsLine}
-        <div class="spacer"></div>
-        <div class="chip">${statusLine}</div>
-      `;
-
-      const btnCont = $('#continueRound');
-      const btnAgain = $('#playAgain');
-      if(outcome===null){
-        btnCont.classList.remove('hidden');
-        btnAgain.classList.add('hidden');
-      } else {
-        btnCont.classList.add('hidden');
-        btnAgain.classList.remove('hidden');
-      }
-
-      show('#screen-results');
-    }
-
-    // ====== Cartas Clash Royale (MockAPI) ======
-    function getRarezaColor(r){
-      if (r === "Común") return "#b9b9b9";
-      if (r === "Especial") return "#4bc9ff";
-      if (r === "Épica") return "#c66bff";
-      if (r === "Legendaria") return "#ffb300";
-      if (r === "Campeón") return "#1e88e5";
-      return "#ffffff";
-    }
-
-    function renderCards(list){
-      const grid = document.getElementById("cardsGrid");
-      grid.innerHTML = "";
-      if(!list || list.length === 0){
-        grid.innerHTML = `<p class="muted">No se encontraron cartas para este filtro.</p>`;
-        return;
-      }
-      list.forEach(carta=>{
-        const card = document.createElement("div");
-        const color = getRarezaColor(carta.rareza);
-        card.className = "cr-card";
-        card.innerHTML = `
-          <img class="cr-card-img" src="${carta.imagen}" alt="${escapeHtml(carta.name)}">
-          <div class="cr-card-name" style="color:${color}">${escapeHtml(carta.name)}</div>
-          <div class="cr-card-rareza">${escapeHtml(carta.rareza || "")}</div>
-        `;
-        grid.appendChild(card);
-      });
-    }
-
-    async function loadCards(){
-      const grid = document.getElementById("cardsGrid");
-      grid.innerHTML = `<p class="muted">Cargando cartas...</p>`;
-      try{
-        await ensureCardsLoaded();
-        renderCards(allCards);
-      }catch(e){
-        console.error(e);
-        grid.innerHTML = `<p class="muted">Error al cargar las cartas.</p>`;
-      }
-    }
-
-    function filterCardsByRareza(rareza){
-      if(!allCards.length) return;
-      if(rareza === "all"){
-        renderCards(allCards);
-      } else {
-        renderCards(allCards.filter(c=>c.rareza === rareza));
-      }
-    }
-
-    // ====== Eventos UI ======
-    $('#createQuick').addEventListener('click', () => {
-      state.room = genRoom();
-      $('#roomCode').textContent = `Sala ${state.room}`;
-      show('#screen-lobby');
-      renderPlayers();
-      renderCategories();
-      updateRoundBanner();
-      updateStartButton();
-    });
-
-    $('#backMenu2').addEventListener('click', () => show('#screen-menu'));
-    $('#btnBackMenu').addEventListener('click', () => show('#screen-menu'));
-    $('#btnReset').addEventListener('click', () => {
-      if(confirm('¿Seguro que querés reiniciar la aplicación?')){
-        localStorage.removeItem('impostor-lite');
-        location.reload();
-      }
-    });
-
-    $('#playerName').addEventListener('keydown', e=>{ if(e.key==='Enter') addPlayer(); });
-    $('#addPlayer').addEventListener('click', addPlayer);
-
-    function addPlayer(){
-      const name = $('#playerName').value.trim();
-      if(!name) return;
-      if(state.players.includes(name)) { alert('Ese nombre ya está en la lista.'); return; }
-      if(state.players.length>=16) { alert('Máximo 16 jugadores.'); return; }
-      state.players.push(name);
-      $('#playerName').value='';
-      renderPlayers();
-      updateStartButton();
-      save();
-    }
-
-    $('#players').addEventListener('click', e=>{
-      if(e.target.classList.contains('x')){
-        const i = +e.target.getAttribute('data-i');
-        state.players.splice(i,1);
-        renderPlayers();
-        updateStartButton();
-        save();
-      }
-    });
-
-    $('#categories').addEventListener('click', e=>{
-      const item = e.target.closest('.selectable');
-      if(!item) return;
-      const cat = item.getAttribute('data-cat');
-      if(state.selectedCategories.has(cat)) state.selectedCategories.delete(cat);
-      else state.selectedCategories.add(cat);
-      item.classList.toggle('selected');
-      updateStartButton();
-      updateRoundBanner();
-    });
-
-    $('#toggleAllCats').addEventListener('click', () => {
-      const all = Object.keys(wordPools);
-      const allSelected = all.every(c=>state.selectedCategories.has(c));
-      state.selectedCategories = new Set(allSelected?[]:all);
-      renderCategories();
-      updateStartButton();
-      updateRoundBanner();
-    });
-
-    document.querySelectorAll('input[name="impostors"]').forEach(r=>{
-      r.addEventListener('change',()=>{
-        const val = parseInt(r.value,10);
-        state.impostorCount = isNaN(val)?1:val;
-      });
-    });
-
-    $('#btnShuffle').addEventListener('click', async () => {
-      if(state.selectedCategories.size===0) { alert('Elegí al menos una categoría.'); return; }
-      const ok = await pickWord();
-      if(ok){
-        updateStartButton();
-        alert('Palabra elegida para la ronda.');
-      }
-    });
-
-    $('#startRound').addEventListener('click', async () => {
-      if(!(state.players.length>=3)) { alert('Mínimo 3 jugadores.'); return; }
-      if(state.selectedCategories.size===0) { alert('Seleccioná categorías.'); return; }
-      if(!state.currentWord){
-        const ok = await pickWord();
-        if(!ok) return;
-      }
-      startRound();
-    });
-
-    $('#btnShow').addEventListener('click', () => {
-      if(state.revealed) return;
-      const i = state.revealStep;
-      const isImp = state.impostorIdxs.includes(i);
-
-      let text;
-
-      if (isImp){
-        text = 'Eres el <strong>IMPOSTOR</strong><br/><span class="muted">Tu palabra es: <em>???</em></span>';
-      } else {
-        if (state.currentWord && typeof state.currentWord === 'object'){
-          const {tipo,nombre,imagen} = state.currentWord;
-          let label = 'Tu palabra es';
-          if(tipo === 'club-arg' || tipo === 'club-mundo') label = 'Tu club es';
-          else if(tipo === 'jug-arg' || tipo === 'jug-mundo') label = 'Tu jugador es';
-          else if(tipo === 'cr-card') label = 'Tu carta es';
-
-          const img = imagen
-            ? `<img src="${imagen}" alt="${escapeHtml(nombre)}" style="width:120px;height:120px;object-fit:contain;display:block;margin:0 auto 8px;">`
-            : '';
-
-          text = `
-            ${img}
-            <div>${label}: <strong>${escapeHtml(nombre)}</strong></div>
-          `;
-        } else {
-          text = `Tu palabra es: <strong>${escapeHtml(state.currentWord)}</strong>`;
-        }
-      }
-
-      $('#revealCard').innerHTML = `<div class="notice">${text}</div>`;
-      state.revealed = true;
-      $('#btnShow').disabled = true;
-    });
-
-    $('#btnNext').addEventListener('click', nextReveal);
-    $('#goVote').addEventListener('click', beginVoting);
-    $('#confirmVote').addEventListener('click', confirmVote);
-    $('#skipVote').addEventListener('click', () => { showResultsAfterVote(null,false); });
-    $('#continueRound').addEventListener('click', () => { beginVoting(); });
-    $('#playAgain').addEventListener('click', async () => {
-      const ok = await pickWord();
-      if(ok) startRound();
-    });
-    $('#toLobby').addEventListener('click', () => { show('#screen-lobby'); updateStartButton(); });
-
-    // Navegación a cartas
-    document.getElementById('btnOpenCards').addEventListener('click', () => {
-      show('#screen-cards');
-      loadCards();
-    });
-
-    document.getElementById('backFromCards').addEventListener('click', () => {
-      show('#screen-menu');
-    });
-
-    // Filtros de rareza
-    document.getElementById('btnFilterAll').addEventListener('click', () => filterCardsByRareza('all'));
-    document.getElementById('btnFilterComunes').addEventListener('click', () => filterCardsByRareza('Común'));
-    document.getElementById('btnFilterEspeciales').addEventListener('click', () => filterCardsByRareza('Especial'));
-    document.getElementById('btnFilterEpicas').addEventListener('click', () => filterCardsByRareza('Épica'));
-    document.getElementById('btnFilterLegendarias').addEventListener('click', () => filterCardsByRareza('Legendaria'));
-    document.getElementById('btnFilterCampeones').addEventListener('click', () => filterCardsByRareza('Campeón'));
-
-    // init
-    load();
-    renderCategories();
-  </script>
-</body>
-</html>
+            <!DOCTYPE html>
+            <html lang="es">
+
+            <head>
+              <meta charset="utf-8" />
+              <meta name="viewport" content="width=device-width, initial-scale=1" />
+              <title>Impostor</title>
+              <link rel="stylesheet" href="style.css">
+            </head>
+
+            <body>
+              <div class="container">
+                <header>
+                  <div class="brand">
+                    <div class="logo">🕵️</div>
+                    <h1>Impostor</h1>
+                  </div>
+                  <div class="row header-actions">
+                    <button class="btn ghost" id="btnBackMenu">Menú</button>
+                    <button class="btn ghost" id="btnReset">Reiniciar</button>
+                  </div>
+                </header>
+
+                <!-- Banner de categorías activas -->
+                <div id="roundBanner" class="hidden">
+                  <div class="chip">
+                    Categorías seleccionadas: <span id="roundCatsText"></span>
+                  </div>
+                </div>
+
+                <!-- MENÚ PRINCIPAL (siempre columna) -->
+                <section id="screen-menu" class="home-screen">
+                  <div class="card">
+                    <div class="content center">
+                      <h2 class="title">Crear partida rápida</h2>
+                      <p class="muted">Juego local en un solo dispositivo. Revelen rol, discutan y definan en grupo.</p>
+                      <div class="spacer"></div>
+                      <div class="row" style="justify-content:center">
+                        <button class="btn primary" id="createQuick">Crear partida</button>
+                        <span class="chip" id="roomCode">Sala — — —</span>
+                      </div>
+                      <div class="spacer"></div>
+                      <div class="row" style="justify-content:center">
+                        <button class="btn ghost" id="btnOpenCards">Cartas Clash Royale</button>
+                      </div>
+                      <div class="spacer"></div>
+                      <div class="notice">Tip: elegí <strong>categorías</strong>. Todos reciben la misma palabra excepto
+                        el
+                        <strong>Impostor</strong>, que recibe <em>???</em>.
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="card">
+                    <div class="content">
+                      <h2 class="title">Cómo se juega</h2>
+                      <ul class="list">
+                        <li><span>1) Agregá jugadores</span><span>👥</span></li>
+                        <li><span>2) Elegí categorías</span><span>🗂️</span></li>
+                        <li><span>3) Elegí la palabra</span><span>🔀</span></li>
+                        <li><span>4) Revelá con <em>Mostrar</em></span><span>📱</span></li>
+                        <li><span>5) Discusión y decisión grupal</span><span>🗳️</span></li>
+                        <li><span>6) Resultado y condición de victoria</span><span>🏆</span></li>
+                      </ul>
+                    </div>
+                  </div>
+                </section>
+
+                <!-- LOBBY -->
+                <section id="screen-lobby" class="hidden">
+                  <div class="grid cols-2">
+                    <div class="card">
+                      <div class="content">
+                        <h2 class="title">Jugadores</h2>
+                        <div class="row">
+                          <input id="playerName" type="text" maxlength="14" placeholder="Agregar jugador (Enter)" />
+                          <button class="btn" id="addPlayer">Agregar</button>
+                        </div>
+                        <div class="spacer"></div>
+                        <div class="players" id="players"></div>
+                        <div class="spacer"></div>
+                        <span class="muted">Mínimo 3 jugadores (máximo 16).</span>
+                      </div>
+                    </div>
+                    <div class="card">
+                      <div class="content">
+                        <h2 class="title">Categorías</h2>
+                        <div id="categories" class="grid cols-3"></div>
+                        <div class="spacer"></div>
+                        <div class="row">
+                          <button class="btn ghost" id="toggleAllCats">Seleccionar todas</button>
+                          <span class="muted">Elegí al menos 1</span>
+                        </div>
+                        <div class="spacer"></div>
+                        <h3 class="title" style="margin-top:8px">Impostores</h3>
+                        <div class="row" id="impostorPicker">
+                          <label class="chip"><input type="radio" name="impostors" value="1" checked
+                              style="margin-right:8px"> 1
+                            impostor</label>
+                          <label class="chip"><input type="radio" name="impostors" value="2" style="margin-right:8px"> 2
+                            impostores</label>
+                          <label class="chip"><input type="radio" name="impostors" value="3" style="margin-right:8px"> 3
+                            impostores</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="footer-nav">
+                    <button class="btn ghost" id="backMenu2">⬅️ Menú</button>
+                    <div class="row">
+                      <button class="btn warning" id="btnShuffle">🔀 Elegir palabra</button>
+                      <button class="btn primary" id="startRound" disabled>▶️ Iniciar ronda</button>
+                    </div>
+                  </div>
+                </section>
+
+                <!-- REVEAL -->
+                <section id="screen-reveal" class="hidden">
+                  <div class="card">
+                    <div class="content center">
+                      <div class="muted">Jugador</div>
+                      <div class="big" id="revealPlayer">—</div>
+                      <div class="spacer"></div>
+                      <div class="notice" id="revealCard">Toquen <strong>Mostrar</strong> para ver su palabra/rol</div>
+                      <div class="spacer"></div>
+                      <div class="row center" style="justify-content:center;gap:12px;flex-wrap:wrap">
+                        <button class="btn" id="btnShow" style="flex:1 1 200px;max-width:360px">Mostrar</button>
+                        <button class="btn ghost" id="btnNext" style="flex:1 1 200px;max-width:360px">Siguiente
+                          ▶️</button>
+                      </div>
+                      <div class="spacer"></div>
+                      <div class="muted">Consejo: no digas tu palabra en voz alta 😉</div>
+                    </div>
+                  </div>
+                </section>
+
+                <!-- DISCUSIÓN -->
+                <section id="screen-discuss" class="hidden">
+                  <div class="card">
+                    <div class="content center">
+                      <h2 class="title">¡A debatir!</h2>
+                      <p class="muted">Hablen 1–3 minutos. Cuando estén listos, pasen a votar.</p>
+                      <div class="spacer"></div>
+                      <button class="btn primary" id="goVote">🗳️ Ir a votar</button>
+                    </div>
+                  </div>
+                </section>
+
+                <!-- VOTACIÓN (GRUPAL) -->
+                <section id="screen-vote" class="hidden">
+                  <div class="card">
+                    <div class="content">
+                      <div class="row" style="justify-content:space-between">
+                        <div class="chip">👥 Vivos: <strong id="playersLeft">—</strong></div>
+                        <div class="chip">🎭 Impostores: <strong id="impostorsLeft">—</strong></div>
+                      </div>
+                      <div class="spacer"></div>
+                      <div class="vote-instructions">Elijan en persona y luego toquen al acusado:</div>
+                      <div class="spacer"></div>
+                      <div id="voteList" class="grid auto"></div>
+                      <div class="spacer"></div>
+                      <div class="row">
+                        <button class="btn success" id="confirmVote">Confirmar decisión</button>
+                        <button class="btn ghost" id="skipVote">No eliminar</button>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                <!-- RESULTADOS -->
+                <section id="screen-results" class="hidden">
+                  <div class="card">
+                    <div class="content center">
+                      <h2 class="title">Resultados</h2>
+                      <div id="resultsBox"></div>
+                      <div class="spacer"></div>
+                      <div class="row center" style="justify-content:center">
+                        <button class="btn primary hidden" id="continueRound">Continuar</button>
+                        <button class="btn" id="playAgain">🔁 Nueva ronda</button>
+                        <button class="btn ghost" id="toLobby">Lobby</button>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                <!-- CARTAS CLASH ROYALE (solo API) -->
+                <section id="screen-cards" class="hidden">
+                  <div class="card">
+                    <div class="content">
+                      <h2 class="title">Cartas Clash Royale (MockAPI)</h2>
+                      <p class="muted">Se muestran cartas desde tus endpoints <code>comunes</code> y
+                        <code>cartas2</code>.
+                      </p>
+                      <div class="spacer"></div>
+                      <div class="cards-toolbar">
+                        <button class="btn ghost" data-filter="all" id="btnFilterAll">Todas</button>
+                        <button class="btn ghost" data-filter="Común" id="btnFilterComunes">Comunes</button>
+                        <button class="btn ghost" data-filter="Especial" id="btnFilterEspeciales">Especiales</button>
+                        <button class="btn ghost" data-filter="Épica" id="btnFilterEpicas">Épicas</button>
+                        <button class="btn ghost" data-filter="Legendaria"
+                          id="btnFilterLegendarias">Legendarias</button>
+                        <button class="btn ghost" data-filter="Campeón" id="btnFilterCampeones">Campeones</button>
+                      </div>
+                      <div class="spacer"></div>
+                      <div id="cardsGrid"></div>
+                    </div>
+                  </div>
+                  <div class="container">
+                    <header>
+                      <div class="brand">
+                        <div class="logo">🕵️</div>
+                        <h1>Impostor</h1>
+                      </div>
+                      <div class="row header-actions">
+                        <button class="btn ghost" id="btnBackMenu">Menú</button>
+                        <button class="btn ghost" id="btnReset">Reiniciar</button>
+                      </div>
+                    </header>
+
+                    <!-- Banner de categorías activas -->
+                    <div id="roundBanner" class="hidden">
+                      <div class="chip">
+                        Categorías seleccionadas: <span id="roundCatsText"></span>
+                      </div>
+                    </div>
+
+                    <!-- MENÚ PRINCIPAL (siempre columna) -->
+                    <section id="screen-menu" class="home-screen">
+                      <div class="card">
+                        <div class="content center">
+                          <h2 class="title">Crear partida rápida</h2>
+                          <p class="muted">Juego local en un solo dispositivo. Revelen rol, discutan y definan en grupo.
+                          </p>
+                          <div class="spacer"></div>
+                          <div class="row" style="justify-content:center">
+                            <button class="btn primary" id="createQuick">Crear partida</button>
+                            <span class="chip" id="roomCode">Sala — — —</span>
+                          </div>
+                          <div class="spacer"></div>
+                          <div class="row" style="justify-content:center">
+                            <button class="btn ghost" id="btnOpenCards">Cartas Clash Royale</button>
+                          </div>
+                          <div class="spacer"></div>
+                          <div class="notice">Tip: elegí <strong>categorías</strong>. Todos reciben la misma palabra
+                            excepto
+                            el
+                            <strong>Impostor</strong>, que recibe <em>???</em>.
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="card">
+                        <div class="content">
+                          <h2 class="title">Cómo se juega</h2>
+                          <ul class="list">
+                            <li><span>1) Agregá jugadores</span><span>👥</span></li>
+                            <li><span>2) Elegí categorías</span><span>🗂️</span></li>
+                            <li><span>3) Elegí la palabra</span><span>🔀</span></li>
+                            <li><span>4) Revelá con <em>Mostrar</em></span><span>📱</span></li>
+                            <li><span>5) Discusión y decisión grupal</span><span>🗳️</span></li>
+                            <li><span>6) Resultado y condición de victoria</span><span>🏆</span></li>
+                          </ul>
+                        </div>
+                      </div>
+                    </section>
+
+                    <!-- LOBBY -->
+                    <section id="screen-lobby" class="hidden">
+                      <div class="grid cols-2">
+                        <div class="card">
+                          <div class="content">
+                            <h2 class="title">Jugadores</h2>
+                            <div class="row">
+                              <input id="playerName" type="text" maxlength="14" placeholder="Agregar jugador (Enter)" />
+                              <button class="btn" id="addPlayer">Agregar</button>
+                            </div>
+                            <div class="spacer"></div>
+                            <div class="players" id="players"></div>
+                            <div class="spacer"></div>
+                            <span class="muted">Mínimo 3 jugadores (máximo 16).</span>
+                          </div>
+                        </div>
+                        <div class="card">
+                          <div class="content">
+                            <h2 class="title">Categorías</h2>
+                            <div id="categories" class="grid cols-3"></div>
+                            <div class="spacer"></div>
+                            <div class="row">
+                              <button class="btn ghost" id="toggleAllCats">Seleccionar todas</button>
+                              <span class="muted">Elegí al menos 1</span>
+                            </div>
+                            <div class="spacer"></div>
+                            <h3 class="title" style="margin-top:8px">Impostores</h3>
+                            <div class="row" id="impostorPicker">
+                              <label class="chip"><input type="radio" name="impostors" value="1" checked
+                                  style="margin-right:8px"> 1
+                                impostor</label>
+                              <label class="chip"><input type="radio" name="impostors" value="2"
+                                  style="margin-right:8px"> 2
+                                impostores</label>
+                              <label class="chip"><input type="radio" name="impostors" value="3"
+                                  style="margin-right:8px"> 3
+                                impostores</label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="footer-nav">
+                        <button class="btn ghost" id="backMenu2">⬅️ Menú</button>
+                        <div class="row">
+                          <button class="btn warning" id="btnShuffle">🔀 Elegir palabra</button>
+                          <button class="btn primary" id="startRound" disabled>▶️ Iniciar ronda</button>
+                        </div>
+                      </div>
+                    </section>
+
+                    <!-- REVEAL -->
+                    <section id="screen-reveal" class="hidden">
+                      <div class="card">
+                        <div class="content center">
+                          <div class="muted">Jugador</div>
+                          <div class="big" id="revealPlayer">—</div>
+                          <div class="spacer"></div>
+                          <div class="notice" id="revealCard">Toquen <strong>Mostrar</strong> para ver su palabra/rol
+                          </div>
+                          <div class="spacer"></div>
+                          <div class="row center" style="justify-content:center;gap:12px;flex-wrap:wrap">
+                            <button class="btn" id="btnShow" style="flex:1 1 200px;max-width:360px">Mostrar</button>
+                            <button class="btn ghost" id="btnNext" style="flex:1 1 200px;max-width:360px">Siguiente
+                              ▶️</button>
+                          </div>
+                          <div class="spacer"></div>
+                          <div class="muted">Consejo: no digas tu palabra en voz alta 😉</div>
+                        </div>
+                      </div>
+                    </section>
+
+                    <!-- DISCUSIÓN -->
+                    <section id="screen-discuss" class="hidden">
+                      <div class="card">
+                        <div class="content center">
+                          <h2 class="title">¡A debatir!</h2>
+                          <p class="muted">Hablen 1–3 minutos. Cuando estén listos, pasen a votar.</p>
+                          <div class="spacer"></div>
+                          <button class="btn primary" id="goVote">🗳️ Ir a votar</button>
+                        </div>
+                      </div>
+                    </section>
+
+                    <!-- VOTACIÓN (GRUPAL) -->
+                    <section id="screen-vote" class="hidden">
+                      <div class="card">
+                        <div class="content">
+                          <div class="row" style="justify-content:space-between">
+                            <div class="chip">👥 Vivos: <strong id="playersLeft">—</strong></div>
+                            <div class="chip">🎭 Impostores: <strong id="impostorsLeft">—</strong></div>
+                          </div>
+                          <div class="spacer"></div>
+                          <div class="vote-instructions">Elijan en persona y luego toquen al acusado:</div>
+                          <div class="spacer"></div>
+                          <div id="voteList" class="grid auto"></div>
+                          <div class="spacer"></div>
+                          <div class="row">
+                            <button class="btn success" id="confirmVote">Confirmar decisión</button>
+                            <button class="btn ghost" id="skipVote">No eliminar</button>
+                          </div>
+                        </div>
+                      </div>
+                    </section>
+
+                    <!-- RESULTADOS -->
+                    <section id="screen-results" class="hidden">
+                      <div class="card">
+                        <div class="content center">
+                          <h2 class="title">Resultados</h2>
+                          <div id="resultsBox"></div>
+                          <div class="spacer"></div>
+                          <div class="row center" style="justify-content:center">
+                            <button class="btn primary hidden" id="continueRound">Continuar</button>
+                            <button class="btn" id="playAgain">🔁 Nueva ronda</button>
+                            <button class="btn ghost" id="toLobby">Lobby</button>
+                          </div>
+                        </div>
+                      </div>
+                    </section>
+
+                    <!-- CARTAS CLASH ROYALE (solo API) -->
+                    <section id="screen-cards" class="hidden">
+                      <div class="card">
+                        <div class="content">
+                          <h2 class="title">Cartas Clash Royale (MockAPI)</h2>
+                          <p class="muted">Se muestran cartas desde tus endpoints <code>comunes</code> y
+                            <code>cartas2</code>.
+                          </p>
+                          <div class="spacer"></div>
+                          <div class="cards-toolbar">
+                            <button class="btn ghost" data-filter="all" id="btnFilterAll">Todas</button>
+                            <button class="btn ghost" data-filter="Común" id="btnFilterComunes">Comunes</button>
+                            <button class="btn ghost" data-filter="Especial"
+                              id="btnFilterEspeciales">Especiales</button>
+                            <button class="btn ghost" data-filter="Épica" id="btnFilterEpicas">Épicas</button>
+                            <button class="btn ghost" data-filter="Legendaria"
+                              id="btnFilterLegendarias">Legendarias</button>
+                            <button class="btn ghost" data-filter="Campeón" id="btnFilterCampeones">Campeones</button>
+                          </div>
+                          <div class="spacer"></div>
+                          <div id="cardsGrid"></div>
+                        </div>
+                      </div>
+                      <div class="footer-nav">
+                        <button class="btn ghost" id="backFromCards">⬅️ Menú</button>
+                      </div>
+                    </section>
+
+                  </div>
+
+                  <script src="script.js"></script>
+            </body>
+
+            </html>
